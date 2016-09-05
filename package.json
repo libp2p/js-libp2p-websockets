@@ -47,7 +47,7 @@
     "multiaddr": "^2.0.2",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
-    "interface-transport": "^0.2.0",
+    "interface-transport": "^0.3.0",
     "pre-commit": "^1.1.2"
   },
   "contributors": [

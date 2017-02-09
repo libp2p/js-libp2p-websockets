@@ -45,7 +45,7 @@
     "aegir": "^10.0.0",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
-    "interface-transport": "~0.3.3",
+    "interface-transport": "~0.3.4",
     "multiaddr": "^2.2.1",
     "pre-commit": "^1.2.2",
     "pull-goodbye": "0.0.1",

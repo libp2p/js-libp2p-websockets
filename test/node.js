@@ -26,14 +26,16 @@ describe('listen', () => {
   })
 
   it('listen, check for callback', (done) => {
-    const listener = ws.createListener((conn) => {})
+    const listener = ws.createListener((conn) => {
+    })
     listener.listen(ma, () => {
       listener.close(done)
     })
   })
 
   it('listen, check for listening event', (done) => {
-    const listener = ws.createListener((conn) => {})
+    const listener = ws.createListener((conn) => {
+    })
     listener.on('listening', () => {
       listener.close(done)
     })
@@ -41,7 +43,8 @@ describe('listen', () => {
   })
 
   it('listen, check for the close event', (done) => {
-    const listener = ws.createListener((conn) => {})
+    const listener = ws.createListener((conn) => {
+    })
     listener.on('listening', () => {
       listener.on('close', done)
       listener.close()
@@ -51,7 +54,8 @@ describe('listen', () => {
 
   it('listen on addr with /ipfs/QmHASH', (done) => {
     const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-    const listener = ws.createListener((conn) => {})
+    const listener = ws.createListener((conn) => {
+    })
     listener.listen(ma, () => {
       listener.close(done)
     })
@@ -74,7 +78,8 @@ describe('listen', () => {
   })
 
   it('getAddrs', (done) => {
-    const listener = ws.createListener((conn) => {})
+    const listener = ws.createListener((conn) => {
+    })
     listener.listen(ma, () => {
       listener.getAddrs((err, addrs) => {
         expect(err).to.not.exist
@@ -100,7 +105,8 @@ describe('listen', () => {
   it('getAddrs preserves IPFS Id', (done) => {
     const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
-    const listener = ws.createListener((conn) => {})
+    const listener = ws.createListener((conn) => {
+    })
     listener.listen(ma, () => {
       listener.getAddrs((err, addrs) => {
         expect(err).to.not.exist
@@ -179,11 +185,15 @@ describe('filter addrs', () => {
     const mh2 = multiaddr('/ip4/127.0.0.1/udp/9090')
     const mh3 = multiaddr('/ip4/127.0.0.1/tcp/9090/ws')
     const mh4 = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+    const mh5 = multiaddr('/dns/ipfs.io/ws')
+    const mh6 = multiaddr('/dns/ipfs.io/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
-    const valid = ws.filter([mh1, mh2, mh3, mh4])
-    expect(valid.length).to.equal(2)
+    const valid = ws.filter([mh1, mh2, mh3, mh4, mh5, mh6])
+    expect(valid.length).to.equal(4)
     expect(valid[0]).to.deep.equal(mh3)
     expect(valid[1]).to.deep.equal(mh4)
+    expect(valid[2]).to.deep.equal(mh5)
+    expect(valid[3]).to.deep.equal(mh6)
     done()
   })
 
@@ -311,6 +321,8 @@ describe('valid Connection', () => {
 })
 
 describe.skip('turbolence', () => {
-  it('dialer - emits error on the other end is terminated abruptly', (done) => {})
-  it('listener - emits error on the other end is terminated abruptly', (done) => {})
+  it('dialer - emits error on the other end is terminated abruptly', (done) => {
+  })
+  it('listener - emits error on the other end is terminated abruptly', (done) => {
+  })
 })

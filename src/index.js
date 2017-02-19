@@ -10,6 +10,30 @@ const log = debug('libp2p:websockets:dialer')
 
 const createListener = require('./listener')
 
+function maToUrl (ma) {
+  const maStrSplit = ma.toString().split('/')
+  const proto = ma.protos()[2].name
+
+  if (!(proto === 'ws' || proto === 'wss')) {
+    throw new Error('invalid multiaddr' + ma.toString())
+  }
+
+  let url = ma.protos()[2].name + '://' + maStrSplit[2]
+
+  if (!multiaddr.isName(ma)) {
+    url += ':' + maStrSplit[4]
+  }
+
+  return url
+}
+
+module.exports =
+  class WebSockets {
+    dial (ma, options, callback) {
+      if (typeof options === 'function') {
+        callback = options
+        options = {}
+      }
 class WebSockets {
   dial (ma, options, callback) {
     if (typeof options === 'function') {
@@ -30,22 +54,22 @@ class WebSockets {
     conn.getObservedAddrs = (callback) => callback(null, [ma])
     conn.close = (callback) => socket.close(callback)
 
-    return conn
-  }
-
-  createListener (options, handler) {
-    if (typeof options === 'function') {
-      handler = options
-      options = {}
+      return conn
     }
 
-    return createListener(options, handler)
-  }
+    createListener (options, handler) {
+      if (typeof options === 'function') {
+        handler = options
+        options = {}
+      }
 
-  filter (multiaddrs) {
-    if (!Array.isArray(multiaddrs)) {
-      multiaddrs = [multiaddrs]
+      return createListener(options, handler)
     }
+
+    filter (multiaddrs) {
+      if (!Array.isArray(multiaddrs)) {
+        multiaddrs = [multiaddrs]
+      }
 
     return multiaddrs.filter((ma) => {
       if (includes(ma.protoNames(), 'ipfs')) {

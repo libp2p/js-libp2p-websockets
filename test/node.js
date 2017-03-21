@@ -1,7 +1,10 @@
 /* eslint-env mocha */
 'use strict'
 
-const expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
 const multiaddr = require('multiaddr')
 const pull = require('pull-stream')
 const goodbye = require('pull-goodbye')
@@ -13,7 +16,7 @@ require('./compliance.node')
 describe('instantiate the transport', () => {
   it('create', () => {
     const ws = new WS()
-    expect(ws).to.exist
+    expect(ws).to.exist()
   })
 })
 
@@ -82,7 +85,7 @@ describe('listen', () => {
     })
     listener.listen(ma, () => {
       listener.getAddrs((err, addrs) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist()
         expect(addrs.length).to.equal(1)
         expect(addrs[0]).to.deep.equal(ma)
         listener.close(done)
@@ -109,7 +112,7 @@ describe('listen', () => {
     })
     listener.listen(ma, () => {
       listener.getAddrs((err, addrs) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist()
         expect(addrs.length).to.equal(1)
         expect(addrs[0]).to.deep.equal(ma)
         listener.close(done)
@@ -141,7 +144,7 @@ describe('dial', () => {
     const s = goodbye({
       source: pull.values(['hey']),
       sink: pull.collect((err, result) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist()
 
         expect(result).to.be.eql(['hey'])
         done()
@@ -162,7 +165,7 @@ describe('dial', () => {
     const s = goodbye({
       source: pull.values(['hey']),
       sink: pull.collect((err, result) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist()
 
         expect(result).to.be.eql(['hey'])
         done()
@@ -217,10 +220,10 @@ describe('valid Connection', () => {
     const ws = new WS()
 
     const listener = ws.createListener((conn) => {
-      expect(conn).to.exist
+      expect(conn).to.exist()
 
       conn.getObservedAddrs((err, addrs) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist()
         dialerObsAddrs = addrs
       })
 
@@ -238,7 +241,7 @@ describe('valid Connection', () => {
 
       function onEnd () {
         conn.getObservedAddrs((err, addrs) => {
-          expect(err).to.not.exist
+          expect(err).to.not.exist()
           listenerObsAddrs = addrs
 
           listener.close(onClose)
@@ -256,10 +259,10 @@ describe('valid Connection', () => {
     const ws = new WS()
 
     const listener = ws.createListener((conn) => {
-      expect(conn).to.exist
+      expect(conn).to.exist()
 
       conn.getPeerInfo((err, peerInfo) => {
-        expect(err).to.exist
+        expect(err).to.exist()
       })
 
       pull(conn, conn)
@@ -276,7 +279,7 @@ describe('valid Connection', () => {
 
       function onEnd () {
         conn.getPeerInfo((err, peerInfo) => {
-          expect(err).to.exit
+          expect(err).to.exist()
           listener.close(done)
         })
       }
@@ -287,11 +290,11 @@ describe('valid Connection', () => {
     const ws = new WS()
 
     const listener = ws.createListener((conn) => {
-      expect(conn).to.exist
+      expect(conn).to.exist()
       conn.setPeerInfo('a')
 
       conn.getPeerInfo((err, peerInfo) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist()
         expect(peerInfo).to.equal('a')
       })
 
@@ -311,7 +314,7 @@ describe('valid Connection', () => {
 
       function onEnd () {
         conn.getPeerInfo((err, peerInfo) => {
-          expect(err).to.not.exist
+          expect(err).to.not.exist()
           expect(peerInfo).to.equal('b')
           listener.close(done)
         })

@@ -73,7 +73,7 @@ module.exports =
         if (includes(ma.protoNames(), 'ipfs')) {
           ma = ma.decapsulate('ipfs')
         }
-        return mafmt.WebSockets.matches(ma)
+        return mafmt.WebSockets.matches(ma) || mafmt.WebSocketsSecure.matches(ma)
       })
     }
 }

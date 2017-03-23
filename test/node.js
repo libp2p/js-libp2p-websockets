@@ -29,36 +29,39 @@ describe('listen', () => {
   })
 
   it('listen, check for callback', (done) => {
-    const listener = ws.createListener((conn) => {
-    })
+    const listener = ws.createListener((conn) => {})
+
     listener.listen(ma, () => {
       listener.close(done)
     })
   })
 
   it('listen, check for listening event', (done) => {
-    const listener = ws.createListener((conn) => {
-    })
+    const listener = ws.createListener((conn) => {})
+
     listener.on('listening', () => {
       listener.close(done)
     })
+
     listener.listen(ma)
   })
 
   it('listen, check for the close event', (done) => {
-    const listener = ws.createListener((conn) => {
-    })
+    const listener = ws.createListener((conn) => {})
+
     listener.on('listening', () => {
       listener.on('close', done)
       listener.close()
     })
+
     listener.listen(ma)
   })
 
   it('listen on addr with /ipfs/QmHASH', (done) => {
     const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-    const listener = ws.createListener((conn) => {
-    })
+
+    const listener = ws.createListener((conn) => {})
+
     listener.listen(ma, () => {
       listener.close(done)
     })
@@ -108,8 +111,8 @@ describe('listen', () => {
   it('getAddrs preserves IPFS Id', (done) => {
     const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
-    const listener = ws.createListener((conn) => {
-    })
+    const listener = ws.createListener((conn) => {})
+
     listener.listen(ma, () => {
       listener.getAddrs((err, addrs) => {
         expect(err).to.not.exist()
@@ -423,8 +426,6 @@ describe('valid Connection', () => {
 })
 
 describe.skip('turbolence', () => {
-  it('dialer - emits error on the other end is terminated abruptly', (done) => {
-  })
-  it('listener - emits error on the other end is terminated abruptly', (done) => {
-  })
+  it('dialer - emits error on the other end is terminated abruptly', (done) => {})
+  it('listener - emits error on the other end is terminated abruptly', (done) => {})
 })

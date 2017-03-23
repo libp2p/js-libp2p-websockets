@@ -10,6 +10,7 @@ const pull = require('pull-stream')
 const goodbye = require('pull-goodbye')
 
 const WS = require('../src')
+const maToUrl = require('../src/ma-to-url')
 
 require('./compliance.node')
 
@@ -422,6 +423,24 @@ describe('valid Connection', () => {
         })
       }
     }
+  })
+})
+
+describe('ma-to-url test', function () {
+  it('should convert ipv4 ma to url', function () {
+    expect(maToUrl(multiaddr('/ip4/127.0.0.1/ws'))).to.equal('ws://127.0.0.1')
+  })
+
+  it('should convert ipv4 ma with port to url', function () {
+    expect(maToUrl(multiaddr('/ip4/127.0.0.1/tcp/80/ws'))).to.equal('ws://127.0.0.1:80')
+  })
+
+  it('should convert dns ma to url', function () {
+    expect(maToUrl(multiaddr('/dns4/ipfs.io/ws'))).to.equal('ws://ipfs.io')
+  })
+
+  it('should convert dns ma  with port to url', function () {
+    expect(maToUrl(multiaddr('/dns4/ipfs.io/tcp/80/ws'))).to.equal('ws://ipfs.io:80')
   })
 })
 

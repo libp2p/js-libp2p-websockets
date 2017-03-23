@@ -29,7 +29,7 @@ function maToUrl (ma) {
     log('No port, skipping')
   }
 
-  let url = `${proto}://${maStrSplit[2]}${(port && (port !== 80 || port !== 443) ? `:${port}/` : '')}`
+  let url = `${proto}://${maStrSplit[2]}${(port && (port !== 80 || port !== 443) ? `:${port}` : '')}`
 
   return url
 }

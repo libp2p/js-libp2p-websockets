@@ -49,9 +49,12 @@ class WebSockets {
     }
 
     return multiaddrs.filter((ma) => {
-      if (includes(ma.protoNames(), 'ipfs')) {
+      if (includes(ma.protoNames(), 'p2p-circuit')) {
+        return false
+      } else if (includes(ma.protoNames(), 'ipfs')) {
         ma = ma.decapsulate('ipfs')
       }
+
       return mafmt.WebSockets.matches(ma) || mafmt.WebSocketsSecure.matches(ma)
     })
   }

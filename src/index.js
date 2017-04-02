@@ -2,7 +2,6 @@
 
 const connect = require('pull-ws/client')
 const mafmt = require('mafmt')
-const includes = require('lodash.includes')
 const Connection = require('interface-connection').Connection
 
 const maToUrl = require('./ma-to-url')
@@ -49,10 +48,10 @@ class WebSockets {
     }
 
     return multiaddrs.filter((ma) => {
-      if (includes(ma.protoNames(), 'ipfs')) {
-        ma = ma.decapsulate('ipfs')
-      }
-      return mafmt.WebSockets.matches(ma) || mafmt.WebSocketsSecure.matches(ma)
+      return mafmt.WebSockets.matches(ma) ||
+        mafmt.WebSocketsSecure.matches(ma) ||
+        mafmt.WebSocketsIPFS.matches(ma) ||
+        mafmt.WebSocketsSecureIPFS.matches(ma)
     })
   }
 }

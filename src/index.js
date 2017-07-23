@@ -12,14 +12,6 @@ const log = debug('libp2p:websockets:dialer')
 const createListener = require('./listener')
 
 class WebSockets {
-  get priority () {
-    return 1 // TODO: move to a constants file that all transports can share
-  }
-
-  set priority (val) {
-    throw new Error('Priority is read only!')
-  }
-
   dial (ma, options, callback) {
     if (typeof options === 'function') {
       callback = options

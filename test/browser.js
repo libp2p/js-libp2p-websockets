@@ -9,7 +9,6 @@ chai.use(dirtyChai)
 const multiaddr = require('multiaddr')
 const pull = require('pull-stream')
 const goodbye = require('pull-goodbye')
-const Buffer = require('safe-buffer')
 
 const WS = require('../src')
 
@@ -21,7 +20,10 @@ describe('libp2p-websockets', () => {
   beforeEach((done) => {
     ws = new WS()
     expect(ws).to.exist()
-    conn = ws.dial(ma, done)
+    conn = ws.dial(ma, (err, res) => {
+      console.log('i am not an error:', err)
+      done()
+    })
   })
 
   it('echo', (done) => {
@@ -41,7 +43,7 @@ describe('libp2p-websockets', () => {
 
   describe('stress', () => {
     it('one big write', (done) => {
-      const rawMessage = Buffer.alloc(1000000).fill('a')
+      const rawMessage = Buffer.allocUnsafe(1000000).fill('a')
 
       const s = goodbye({
         source: pull.values([rawMessage]),

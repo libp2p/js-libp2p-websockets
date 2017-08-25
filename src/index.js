@@ -25,7 +25,6 @@ class WebSockets {
     const socket = connect(url, {
       binary: true,
       onConnect: (err) => {
-        console.log('connect', JSON.stringify(err))
         callback(err)
       }
     })

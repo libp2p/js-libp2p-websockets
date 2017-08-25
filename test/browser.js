@@ -21,7 +21,7 @@ describe('libp2p-websockets', () => {
     ws = new WS()
     expect(ws).to.exist()
     conn = ws.dial(ma, (err, res) => {
-      console.log('i am not an error:', err)
+      expect(err).to.not.exist()
       done()
     })
   })

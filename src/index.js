@@ -49,9 +49,7 @@ class WebSockets {
 
     return multiaddrs.filter((ma) => {
       return mafmt.WebSockets.matches(ma) ||
-        mafmt.WebSocketsSecure.matches(ma) ||
-        mafmt.WebSocketsIPFS.matches(ma) ||
-        mafmt.WebSocketsSecureIPFS.matches(ma)
+        mafmt.WebSocketsSecure.matches(ma)
     })
   }
 }

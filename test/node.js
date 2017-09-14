@@ -295,8 +295,10 @@ describe('filter addrs', () => {
       const ma2 = multiaddr('/ip4/127.0.0.1/tcp/9090')
       const ma3 = multiaddr('/ip4/127.0.0.1/udp/9090')
       const ma4 = multiaddr('/dns6/ipfs.io/ws')
+      const mh5 = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw' +
+        '/p2p-circuit/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
-      const valid = ws.filter([ma1, ma2, ma3, ma4])
+      const valid = ws.filter([ma1, ma2, ma3, ma4, mh5])
       expect(valid.length).to.equal(2)
       expect(valid[0]).to.deep.equal(ma1)
       expect(valid[1]).to.deep.equal(ma4)

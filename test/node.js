@@ -1,4 +1,5 @@
 /* eslint-env mocha */
+/* eslint max-nested-callbacks: ["error", 5] */
 'use strict'
 
 const chai = require('chai')
@@ -97,16 +98,45 @@ describe('listen', () => {
     })
   })
 
-  it.skip('getAddrs on port 0 listen', (done) => {
-    // TODO port 0 not supported yet
+  it('getAddrs on port 0 listen', (done) => {
+    const addr = multiaddr(`/ip4/127.0.0.1/tcp/0/ws`)
+    const listener = ws.createListener((conn) => {
+    })
+    listener.listen(addr, () => {
+      listener.getAddrs((err, addrs) => {
+        expect(err).to.not.exist()
+        expect(addrs.length).to.equal(1)
+        expect(addrs.map((a) => a.toOptions().port)).to.not.include('0')
+        listener.close(done)
+      })
+    })
   })
 
-  it.skip('getAddrs from listening on 0.0.0.0', (done) => {
-    // TODO 0.0.0.0 not supported yet
+  it('getAddrs from listening on 0.0.0.0', (done) => {
+    const addr = multiaddr(`/ip4/0.0.0.0/tcp/9003/ws`)
+    const listener = ws.createListener((conn) => {
+    })
+    listener.listen(addr, () => {
+      listener.getAddrs((err, addrs) => {
+        expect(err).to.not.exist()
+        expect(addrs.map((a) => a.toOptions().host)).to.not.include('0.0.0.0')
+        listener.close(done)
+      })
+    })
   })
 
-  it.skip('getAddrs from listening on 0.0.0.0 and port 0', (done) => {
-    // TODO 0.0.0.0 or port 0 not supported yet
+  it('getAddrs from listening on 0.0.0.0 and port 0', (done) => {
+    const addr = multiaddr(`/ip4/0.0.0.0/tcp/0/ws`)
+    const listener = ws.createListener((conn) => {
+    })
+    listener.listen(addr, () => {
+      listener.getAddrs((err, addrs) => {
+        expect(err).to.not.exist()
+        expect(addrs.map((a) => a.toOptions().host)).to.not.include('0.0.0.0')
+        expect(addrs.map((a) => a.toOptions().port)).to.not.include('0')
+        listener.close(done)
+      })
+    })
   })
 
   it('getAddrs preserves IPFS Id', (done) => {
@@ -348,6 +378,7 @@ describe('valid Connection', () => {
           listenerObsAddrs = addrs
 
           listener.close(onClose)
+
           function onClose () {
             expect(listenerObsAddrs[0]).to.deep.equal(ma)
             expect(dialerObsAddrs.length).to.equal(0)
@@ -405,6 +436,7 @@ describe('valid Connection', () => {
     })
 
     listener.listen(ma, onListen)
+
     function onListen () {
       const conn = ws.dial(ma)
       conn.setPeerInfo('b')

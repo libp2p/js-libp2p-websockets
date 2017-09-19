@@ -39,7 +39,7 @@
     "interface-connection": "~0.3.2",
     "lodash.includes": "^4.3.0",
     "mafmt": "^2.1.8",
-    "pull-ws": "^3.2.9"
+    "pull-ws": "^3.0.0"
   },
   "devDependencies": {
     "aegir": "^11.0.2",

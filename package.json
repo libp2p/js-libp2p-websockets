@@ -4,16 +4,16 @@
   "description": "JavaScript implementation of the WebSockets module that libp2p uses and that implements the interface-transport spec",
   "main": "src/index.js",
   "scripts": {
-    "lint": "aegir-lint",
-    "test": "gulp test",
-    "test:node": "gulp test:node",
-    "test:browser": "gulp test:browser",
-    "build": "gulp build",
-    "release": "gulp release",
-    "release-minor": "gulp release --type minor",
-    "release-major": "gulp release --type major",
-    "coverage": "gulp coverage",
-    "coverage-publish": "aegir-coverage publish"
+    "lint": "aegir lint",
+    "build": "aegir build",
+    "test": "aegir test --target node --target browser",
+    "test:node": "aegir test --target node",
+    "test:browser": "aegir test --target browser",
+    "release": "aegir test release --target node --target browser",
+    "release-minor": "aegir release --type minor --target node --target browser",
+    "release-major": "aegir release --type major --target node --target browser",
+    "coverage": "aegir coverage",
+    "coverage-publish": "aegir coverage --provider coveralls"
   },
   "browser": {
     "pull-ws/server": false
@@ -38,11 +38,11 @@
   "dependencies": {
     "interface-connection": "~0.3.2",
     "lodash.includes": "^4.3.0",
-    "mafmt": "^2.1.8",
+    "mafmt": "^3.0.1",
     "pull-ws": "^3.2.9"
   },
   "devDependencies": {
-    "aegir": "^11.0.2",
+    "aegir": "^12.0.8",
     "chai": "^4.1.1",
     "dirty-chai": "^2.0.1",
     "gulp": "^3.9.1",

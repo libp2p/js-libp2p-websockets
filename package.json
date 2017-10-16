@@ -6,10 +6,10 @@
   "scripts": {
     "lint": "aegir lint",
     "build": "aegir build",
-    "test": "aegir test --target node --target browser",
+    "test": "aegir test --target node --target browser --no-parallel",
     "test:node": "aegir test --target node",
-    "test:browser": "aegir test --target browser",
-    "release": "aegir test release --target node --target browser",
+    "test:browser": "aegir test --target browser --no-parallel",
+    "release": "aegir test release --target node --target browser --no-parallel",
     "release-minor": "aegir release --type minor --target node --target browser",
     "release-major": "aegir release --type major --target node --target browser",
     "coverage": "aegir coverage",

@@ -53,7 +53,8 @@ describe('libp2p-websockets', () => {
       pull(s, conn, s)
     })
 
-    it('many writes', (done) => {
+    it('many writes', function (done) {
+      this.timeout(10000)
       const s = goodbye({
         source: pull(
           pull.infinite(),

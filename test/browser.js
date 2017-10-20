@@ -13,7 +13,7 @@ const goodbye = require('pull-goodbye')
 const WS = require('../src')
 
 describe('libp2p-websockets', () => {
-  const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws')
+  const ma = multiaddr('/ip4/127.0.0.1/tcp/9095/ws')
   let ws
   let conn
 

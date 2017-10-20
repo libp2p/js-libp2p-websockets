@@ -10,10 +10,8 @@ let listener
 
 function boot (done) {
   const ws = new WS()
-  const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws')
-  listener = ws.createListener((conn) => {
-    pull(conn, conn)
-  })
+  const ma = multiaddr('/ip4/127.0.0.1/tcp/9095/ws')
+  listener = ws.createListener((conn) => pull(conn, conn))
   listener.listen(ma, done)
 }
 

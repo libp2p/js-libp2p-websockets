@@ -158,7 +158,7 @@ describe('listen', () => {
 describe('dial', () => {
   let ws
   let listener
-  const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws')
+  const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws')
 
   beforeEach((done) => {
     ws = new WS()
@@ -193,7 +193,7 @@ describe('dial', () => {
   })
 
   it('dial on IPv4 with IPFS Id', (done) => {
-    const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+    const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
     const conn = ws.dial(ma)
 
     const s = goodbye({
@@ -346,7 +346,7 @@ describe('filter addrs', () => {
 })
 
 describe('valid Connection', () => {
-  const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws')
+  const ma = multiaddr('/ip4/127.0.0.1/tcp/9092/ws')
 
   it('get observed addrs', (done) => {
     let dialerObsAddrs

@@ -40,7 +40,7 @@ describe('libp2p-websockets', () => {
 
   describe('stress', () => {
     it('one big write', (done) => {
-      const rawMessage = new Buffer(1000000).fill('a')
+      const rawMessage = Buffer.alloc(1000000).fill('a')
 
       const s = goodbye({
         source: pull.values([rawMessage]),
@@ -53,12 +53,13 @@ describe('libp2p-websockets', () => {
       pull(s, conn, s)
     })
 
-    it('many writes', (done) => {
+    it('many writes', function (done) {
+      this.timeout(10000)
       const s = goodbye({
         source: pull(
           pull.infinite(),
           pull.take(1000),
-          pull.map((val) => Buffer(val.toString()))
+          pull.map((val) => Buffer.from(val.toString()))
         ),
         sink: pull.collect((err, result) => {
           expect(err).to.not.exist()

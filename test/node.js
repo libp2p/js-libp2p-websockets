@@ -172,11 +172,11 @@ describe('dial', () => {
     const conn = ws.dial(ma)
 
     const s = goodbye({
-      source: pull.values(['hey']),
+      source: pull.values([Buffer.from('hey')]),
       sink: pull.collect((err, result) => {
         expect(err).to.not.exist()
 
-        expect(result).to.be.eql(['hey'])
+        expect(result).to.be.eql([Buffer.from('hey')])
         done()
       })
     })
@@ -193,11 +193,11 @@ describe('dial', () => {
     const conn = ws.dial(ma)
 
     const s = goodbye({
-      source: pull.values(['hey']),
+      source: pull.values([Buffer.from('hey')]),
       sink: pull.collect((err, result) => {
         expect(err).to.not.exist()
 
-        expect(result).to.be.eql(['hey'])
+        expect(result).to.be.eql([Buffer.from('hey')])
         done()
       })
     })
@@ -221,7 +221,7 @@ describe('dont crash', () => {
       pull(conn, reader) // simulate mss-listener
     })
     listener.listen(ma, done)
-    reader.read(1, console.log)
+    reader.read(1, err => err ? done(err) : false)
   })
 
   afterEach((done) => {

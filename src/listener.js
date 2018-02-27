@@ -4,8 +4,31 @@ const Connection = require('interface-connection').Connection
 const includes = require('lodash.includes')
 const multiaddr = require('multiaddr')
 const os = require('os')
+const pull = require('pull-stream')
 
 function noop () {}
+
+function handle (data) {
+  if (Buffer.isBuffer(data)) return data
+  try {
+    return Buffer.from(data)
+  } catch (e) {
+    return Buffer.from('')
+  }
+}
+
+function safe (conn) {
+  return {
+    sink: pull(
+      pull.map(handle),
+      conn.sink
+    ),
+    source: pull(
+      conn.source,
+      pull.map(handle)
+    )
+  }
+}
 
 const createServer = require('pull-ws/server') || noop
 
@@ -16,7 +39,7 @@ module.exports = (options, handler) => {
       return callback(null, [])
     }
 
-    handler(new Connection(socket))
+    handler(new Connection(safe(socket)))
   })
 
   let listeningMultiaddr

@@ -86,8 +86,7 @@ describe('listen', () => {
   })
 
   it('getAddrs', (done) => {
-    const listener = ws.createListener((conn) => {
-    })
+    const listener = ws.createListener((conn) => {})
     listener.listen(ma, () => {
       listener.getAddrs((err, addrs) => {
         expect(err).to.not.exist()
@@ -100,8 +99,7 @@ describe('listen', () => {
 
   it('getAddrs on port 0 listen', (done) => {
     const addr = multiaddr(`/ip4/127.0.0.1/tcp/0/ws`)
-    const listener = ws.createListener((conn) => {
-    })
+    const listener = ws.createListener((conn) => {})
     listener.listen(addr, () => {
       listener.getAddrs((err, addrs) => {
         expect(err).to.not.exist()
@@ -114,8 +112,7 @@ describe('listen', () => {
 
   it('getAddrs from listening on 0.0.0.0', (done) => {
     const addr = multiaddr(`/ip4/0.0.0.0/tcp/9003/ws`)
-    const listener = ws.createListener((conn) => {
-    })
+    const listener = ws.createListener((conn) => {})
     listener.listen(addr, () => {
       listener.getAddrs((err, addrs) => {
         expect(err).to.not.exist()
@@ -127,8 +124,7 @@ describe('listen', () => {
 
   it('getAddrs from listening on 0.0.0.0 and port 0', (done) => {
     const addr = multiaddr(`/ip4/0.0.0.0/tcp/0/ws`)
-    const listener = ws.createListener((conn) => {
-    })
+    const listener = ws.createListener((conn) => {})
     listener.listen(addr, () => {
       listener.getAddrs((err, addrs) => {
         expect(err).to.not.exist()
@@ -207,6 +203,41 @@ describe('dial', () => {
     })
 
     pull(s, conn, s)
+  })
+})
+
+const connect = require('pull-ws/client')
+const Reader = require('pull-reader')
+
+describe('dont crash', () => {
+  let ws
+  let listener
+  const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws')
+
+  beforeEach((done) => {
+    ws = new WS()
+    const reader = Reader(10000)
+    listener = ws.createListener((conn) => {
+      pull(conn, reader) // simulate mss-listener
+    })
+    listener.listen(ma, done)
+    reader.read(1, console.log)
+  })
+
+  afterEach((done) => {
+    listener.close(done)
+  })
+
+  it('try to crash the node', (done) => {
+    const conn = connect('ws://localhost:9091')
+
+    pull(
+      pull.values(['This should not crash the node']),
+      conn,
+      pull.drain()
+    )
+
+    setTimeout(() => done(), 100) // wait for the crash
   })
 })
 

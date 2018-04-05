@@ -75,3 +75,8 @@ describe('libp2p-websockets', () => {
     })
   })
 })
+
+it('.createServer throws in browser', done => {
+  expect(new WS().createListener).to.throw()
+  done()
+})

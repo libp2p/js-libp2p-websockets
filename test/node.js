@@ -8,7 +8,6 @@ const expect = chai.expect
 chai.use(dirtyChai)
 const multiaddr = require('multiaddr')
 const pull = require('pull-stream')
-const goodbye = require('pull-goodbye')
 
 const WS = require('../src')
 const maToUrl = require('../src/ma-to-url')
@@ -171,7 +170,7 @@ describe('dial', () => {
   it('dial on IPv4', (done) => {
     const conn = ws.dial(ma)
 
-    const s = goodbye({
+    const s = {
       source: pull.values([Buffer.from('hey')]),
       sink: pull.collect((err, result) => {
         expect(err).to.not.exist()
@@ -179,7 +178,7 @@ describe('dial', () => {
         expect(result).to.be.eql([Buffer.from('hey')])
         done()
       })
-    })
+    }
 
     pull(s, conn, s)
   })
@@ -192,7 +191,7 @@ describe('dial', () => {
     const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
     const conn = ws.dial(ma)
 
-    const s = goodbye({
+    const s = {
       source: pull.values([Buffer.from('hey')]),
       sink: pull.collect((err, result) => {
         expect(err).to.not.exist()
@@ -200,7 +199,7 @@ describe('dial', () => {
         expect(result).to.be.eql([Buffer.from('hey')])
         done()
       })
-    })
+    }
 
     pull(s, conn, s)
   })
@@ -510,8 +509,6 @@ describe('ma-to-url test', function () {
 })
 
 describe.skip('turbolence', () => {
-  it('dialer - emits error on the other end is terminated abruptly', (done) => {
-  })
-  it('listener - emits error on the other end is terminated abruptly', (done) => {
-  })
+  it('dialer - emits error on the other end is terminated abruptly', (done) => { })
+  it('listener - emits error on the other end is terminated abruptly', (done) => { })
 })

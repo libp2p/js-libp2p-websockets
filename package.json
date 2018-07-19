@@ -19,10 +19,6 @@
   "browser": {
     "src/listener": "./src/listener.browser.js"
   },
-  "pre-push": [
-    "lint",
-    "test"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/libp2p/js-libp2p-websockets.git"
@@ -43,10 +39,9 @@
     "pull-ws": "^3.3.1"
   },
   "devDependencies": {
-    "aegir": "^13.1.0",
+    "aegir": "^15.0.0",
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
-    "gulp": "^3.9.1",
     "interface-transport": "~0.3.6",
     "multiaddr": "^5.0.0",
     "pull-goodbye": "0.0.2",

@@ -53,6 +53,7 @@
     "interface-transport": "~0.3.6",
     "multiaddr": "^6.0.3",
     "pull-goodbye": "0.0.2",
+    "pull-reader": "^1.2.9",
     "pull-stream": "^3.6.7"
   },
   "contributors": [

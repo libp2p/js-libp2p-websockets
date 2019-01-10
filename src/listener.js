@@ -3,6 +3,7 @@
 const Connection = require('interface-connection').Connection
 const multiaddr = require('multiaddr')
 const os = require('os')
+const safe = require('./safe-socket')
 
 function noop () {}
 
@@ -15,7 +16,7 @@ module.exports = (options, handler) => {
       return callback(null, [])
     }
 
-    handler(new Connection(socket))
+    handler(new Connection(safe(socket)))
   })
 
   let listeningMultiaddr

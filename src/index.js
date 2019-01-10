@@ -4,6 +4,7 @@ const connect = require('pull-ws/client')
 const mafmt = require('mafmt')
 const withIs = require('class-is')
 const Connection = require('interface-connection').Connection
+const safe = require('./safe-socket')
 
 const maToUrl = require('./ma-to-url')
 const debug = require('debug')
@@ -29,7 +30,7 @@ class WebSockets {
       }
     })
 
-    const conn = new Connection(socket)
+    const conn = new Connection(safe(socket))
     conn.getObservedAddrs = (cb) => cb(null, [ma])
     conn.close = (cb) => socket.close(cb)
 

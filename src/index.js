@@ -18,7 +18,7 @@ class WebSockets {
       options = {}
     }
 
-    callback = callback || function () {}
+    callback = callback || function () { }
 
     const url = toUri(ma)
     log('dialing %s', url)

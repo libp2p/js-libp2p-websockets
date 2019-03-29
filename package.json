@@ -43,9 +43,9 @@
     "class-is": "^1.1.0",
     "debug": "^4.1.1",
     "interface-connection": "~0.3.3",
+    "it-ws": "^2.1.0",
     "mafmt": "^6.0.7",
-    "multiaddr-to-uri": "^5.0.0",
-    "pull-ws": "hugomrdias/pull-ws#fix/bundle-size"
+    "multiaddr-to-uri": "^5.0.0"
   },
   "devDependencies": {
     "aegir": "^20.0.0",

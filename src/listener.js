@@ -1,43 +1,35 @@
 'use strict'
 
-const Connection = require('interface-connection').Connection
 const multiaddr = require('multiaddr')
 const os = require('os')
 
-function noop () {}
-
-const createServer = require('pull-ws/server') || noop
+const createServer = require('it-ws/server')
 
 module.exports = (options, handler) => {
-  const listener = createServer(options, (socket) => {
-    socket.getObservedAddrs = (callback) => {
-      // TODO research if we can reuse the address in anyway
-      return callback(null, [])
-    }
-
-    handler(new Connection(socket))
+  const server = createServer(options, socket => {
+    socket.getObservedAddrs = () => []
+    handler(socket)
   })
 
   let listeningMultiaddr
 
-  listener._listen = listener.listen
-  listener.listen = (ma, callback) => {
-    callback = callback || noop
+  const listen = server.listen
+  server.listen = ma => {
     listeningMultiaddr = ma
 
     if (ma.protoNames().includes('ipfs')) {
       ma = ma.decapsulate('ipfs')
     }
 
-    listener._listen(ma.toOptions(), callback)
+    return listen(ma.toOptions())
   }
 
-  listener.getAddrs = (callback) => {
+  server.getAddrs = async () => {
     const multiaddrs = []
-    const address = listener.address()
+    const address = server.address()
 
     if (!address) {
-      return callback(new Error('Listener is not ready yet'))
+      throw new Error('Listener is not ready yet')
     }
 
     const ipfsId = listeningMultiaddr.getPeerId()
@@ -65,8 +57,8 @@ module.exports = (options, handler) => {
       }
     }
 
-    callback(null, multiaddrs)
+    return multiaddrs
   }
 
-  return listener
+  return server
 }

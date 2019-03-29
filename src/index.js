@@ -1,47 +1,24 @@
 'use strict'
 
-const connect = require('pull-ws/client')
+const connect = require('it-ws/client')
 const mafmt = require('mafmt')
 const withIs = require('class-is')
-const Connection = require('interface-connection').Connection
-
 const toUri = require('multiaddr-to-uri')
-const debug = require('debug')
-const log = debug('libp2p:websockets:dialer')
+const log = require('debug')('libp2p:websockets:transport')
 
 const createListener = require('./listener')
 
 class WebSockets {
-  dial (ma, options, callback) {
-    if (typeof options === 'function') {
-      callback = options
-      options = {}
-    }
-
-    callback = callback || function () { }
-
+  async dial (ma, options) {
+    log('dialing %s', ma)
     const url = toUri(ma)
-    log('dialing %s', url)
-    const socket = connect(url, {
-      binary: true,
-      onConnect: (err) => {
-        callback(err)
-      }
-    })
-
-    const conn = new Connection(socket)
-    conn.getObservedAddrs = (cb) => cb(null, [ma])
-    conn.close = (cb) => socket.close(cb)
-
-    return conn
+    const socket = connect(url, { binary: true })
+    socket.getObservedAddrs = () => [ma]
+    log('connected %s', ma)
+    return socket
   }
 
   createListener (options, handler) {
-    if (typeof options === 'function') {
-      handler = options
-      options = {}
-    }
-
     return createListener(options, handler)
   }
 

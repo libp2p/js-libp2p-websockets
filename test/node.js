@@ -30,19 +30,18 @@ describe('listen', () => {
       ws = new WS()
     })
 
-    it('listen, check for callback', (done) => {
+    it('listen, check for promise', async () => {
       const listener = ws.createListener((conn) => { })
-
-      listener.listen(ma, () => {
-        listener.close(done)
-      })
+      await listener.listen(ma)
+      await listener.close()
     })
 
     it('listen, check for listening event', (done) => {
       const listener = ws.createListener((conn) => { })
 
-      listener.on('listening', () => {
-        listener.close(done)
+      listener.on('listening', async () => {
+        await listener.close()
+        done()
       })
 
       listener.listen(ma)
@@ -59,14 +58,12 @@ describe('listen', () => {
       listener.listen(ma)
     })
 
-    it('listen on addr with /ipfs/QmHASH', (done) => {
+    it('listen on addr with /ipfs/QmHASH', async () => {
       const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-
       const listener = ws.createListener((conn) => { })
 
-      listener.listen(ma, () => {
-        listener.close(done)
-      })
+      await listener.listen(ma)
+      await listener.close()
     })
 
     it.skip('close listener with connections, through timeout', (done) => {
@@ -82,73 +79,53 @@ describe('listen', () => {
       // TODO 0.0.0.0 not supported yet
     })
 
-    it('getAddrs', (done) => {
-      const listener = ws.createListener((conn) => {
-      })
-      listener.listen(ma, () => {
-        listener.getAddrs((err, addrs) => {
-          expect(err).to.not.exist()
-          expect(addrs.length).to.equal(1)
-          expect(addrs[0]).to.deep.equal(ma)
-          listener.close(done)
-        })
-      })
+    it('getAddrs', async () => {
+      const listener = ws.createListener((conn) => { })
+      await listener.listen(ma)
+      const addrs = await listener.getAddrs()
+      expect(addrs.length).to.equal(1)
+      expect(addrs[0]).to.deep.equal(ma)
+      await listener.close()
     })
 
-    it('getAddrs on port 0 listen', (done) => {
+    it('getAddrs on port 0 listen', async () => {
       const addr = multiaddr(`/ip4/127.0.0.1/tcp/0/ws`)
-      const listener = ws.createListener((conn) => {
-      })
-      listener.listen(addr, () => {
-        listener.getAddrs((err, addrs) => {
-          expect(err).to.not.exist()
-          expect(addrs.length).to.equal(1)
-          expect(addrs.map((a) => a.toOptions().port)).to.not.include('0')
-          listener.close(done)
-        })
-      })
+      const listener = ws.createListener((conn) => { })
+      await listener.listen(addr)
+      const addrs = await listener.getAddrs()
+      expect(addrs.length).to.equal(1)
+      expect(addrs.map((a) => a.toOptions().port)).to.not.include('0')
+      await listener.close()
     })
 
-    it('getAddrs from listening on 0.0.0.0', (done) => {
+    it('getAddrs from listening on 0.0.0.0', async () => {
       const addr = multiaddr(`/ip4/0.0.0.0/tcp/9003/ws`)
-      const listener = ws.createListener((conn) => {
-      })
-      listener.listen(addr, () => {
-        listener.getAddrs((err, addrs) => {
-          expect(err).to.not.exist()
-          expect(addrs.map((a) => a.toOptions().host)).to.not.include('0.0.0.0')
-          listener.close(done)
-        })
-      })
+      const listener = ws.createListener((conn) => { })
+      await listener.listen(addr)
+      const addrs = await listener.getAddrs()
+      expect(addrs.map((a) => a.toOptions().host)).to.not.include('0.0.0.0')
+      await listener.close()
     })
 
-    it('getAddrs from listening on 0.0.0.0 and port 0', (done) => {
+    it('getAddrs from listening on 0.0.0.0 and port 0', async () => {
       const addr = multiaddr(`/ip4/0.0.0.0/tcp/0/ws`)
-      const listener = ws.createListener((conn) => {
-      })
-      listener.listen(addr, () => {
-        listener.getAddrs((err, addrs) => {
-          expect(err).to.not.exist()
-          expect(addrs.map((a) => a.toOptions().host)).to.not.include('0.0.0.0')
-          expect(addrs.map((a) => a.toOptions().port)).to.not.include('0')
-          listener.close(done)
-        })
-      })
+      const listener = ws.createListener((conn) => { })
+      await listener.listen(addr)
+      const addrs = await listener.getAddrs()
+      expect(addrs.map((a) => a.toOptions().host)).to.not.include('0.0.0.0')
+      expect(addrs.map((a) => a.toOptions().port)).to.not.include('0')
+      await listener.close()
     })
 
-    it('getAddrs preserves IPFS Id', (done) => {
+    it('getAddrs preserves IPFS Id', async () => {
       const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-
       const listener = ws.createListener((conn) => { })
 
-      listener.listen(ma, () => {
-        listener.getAddrs((err, addrs) => {
-          expect(err).to.not.exist()
-          expect(addrs.length).to.equal(1)
-          expect(addrs[0]).to.deep.equal(ma)
-          listener.close(done)
-        })
-      })
+      await listener.listen(ma)
+      const addrs = await listener.getAddrs()
+      expect(addrs.length).to.equal(1)
+      expect(addrs[0]).to.deep.equal(ma)
+      await listener.close()
     })
   })
 
@@ -160,19 +137,18 @@ describe('listen', () => {
       ws = new WS()
     })
 
-    it('listen, check for callback', (done) => {
+    it('listen, check for promise', async () => {
       const listener = ws.createListener((conn) => { })
-
-      listener.listen(ma, () => {
-        listener.close(done)
-      })
+      await listener.listen(ma)
+      await listener.close()
     })
 
     it('listen, check for listening event', (done) => {
       const listener = ws.createListener((conn) => { })
 
-      listener.on('listening', () => {
-        listener.close(done)
+      listener.on('listening', async () => {
+        await listener.close()
+        done()
       })
 
       listener.listen(ma)
@@ -189,14 +165,11 @@ describe('listen', () => {
       listener.listen(ma)
     })
 
-    it('listen on addr with /ipfs/QmHASH', (done) => {
+    it('listen on addr with /ipfs/QmHASH', async () => {
       const ma = multiaddr('/ip6/::1/tcp/9091/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-
       const listener = ws.createListener((conn) => { })
-
-      listener.listen(ma, () => {
-        listener.close(done)
-      })
+      await listener.listen(ma)
+      await listener.close()
     })
   })
 })

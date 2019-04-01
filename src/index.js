@@ -9,10 +9,9 @@ const log = require('debug')('libp2p:websockets:transport')
 const createListener = require('./listener')
 
 class WebSockets {
-  async dial (ma, options) {
+  dial (ma, options) {
     log('dialing %s', ma)
-    const url = toUri(ma)
-    const socket = connect(url, { binary: true })
+    const socket = connect(toUri(ma), { binary: true })
     socket.getObservedAddrs = () => [ma]
     log('connected %s', ma)
     return socket
@@ -23,9 +22,7 @@ class WebSockets {
   }
 
   filter (multiaddrs) {
-    if (!Array.isArray(multiaddrs)) {
-      multiaddrs = [multiaddrs]
-    }
+    multiaddrs = Array.isArray(multiaddrs) ? multiaddrs : [multiaddrs]
 
     return multiaddrs.filter((ma) => {
       if (ma.protoNames().includes('p2p-circuit')) {
@@ -36,10 +33,12 @@ class WebSockets {
         ma = ma.decapsulate('ipfs')
       }
 
-      return mafmt.WebSockets.matches(ma) ||
-        mafmt.WebSocketsSecure.matches(ma)
+      return mafmt.WebSockets.matches(ma) || mafmt.WebSocketsSecure.matches(ma)
     })
   }
 }
 
-module.exports = withIs(WebSockets, { className: 'WebSockets', symbolName: '@libp2p/js-libp2p-websockets/websockets' })
+module.exports = withIs(WebSockets, {
+  className: 'WebSockets',
+  symbolName: '@libp2p/js-libp2p-websockets/websockets'
+})

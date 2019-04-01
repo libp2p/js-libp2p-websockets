@@ -40,10 +40,11 @@
   },
   "homepage": "https://github.com/libp2p/js-libp2p-websockets#readme",
   "dependencies": {
+    "async-iterator-to-pull-stream": "^1.3.0",
     "class-is": "^1.1.0",
     "debug": "^4.1.1",
     "interface-connection": "~0.3.2",
-    "it-ws": "^1.0.0",
+    "it-ws": "^2.1.0",
     "mafmt": "^6.0.4",
     "multiaddr-to-uri": "^4.0.1"
   },

@@ -2,7 +2,6 @@
 
 const multiaddr = require('multiaddr')
 const os = require('os')
-
 const createServer = require('it-ws/server')
 
 module.exports = (options, handler) => {

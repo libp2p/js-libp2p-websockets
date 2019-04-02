@@ -3,6 +3,8 @@
 const { Connection } = require('interface-connection')
 const withIs = require('class-is')
 const toPull = require('async-iterator-to-pull-stream')
+const error = require('pull-stream/sources/error')
+const drain = require('pull-stream/sinks/drain')
 const WebSockets = require('./')
 const noop = () => {}
 
@@ -33,13 +35,19 @@ class WebSocketsAdapter extends WebSockets {
 
     callback = callback || noop
 
-    const socket = super.dial(ma, options)
-    const conn = new Connection(toPull.duplex(socket))
+    const conn = new Connection()
 
-    conn.getObservedAddrs = callbackify(socket.getObservedAddrs.bind(socket))
-    conn.close = callbackify(socket.close.bind(socket))
-
-    socket.connected().then(callback).catch(callback)
+    super.dial(ma, options)
+      .then(socket => {
+        conn.setInnerConn(toPull.duplex(socket))
+        conn.getObservedAddrs = callbackify(socket.getObservedAddrs.bind(socket))
+        conn.close = callbackify(socket.close.bind(socket))
+        callback(null, conn)
+      })
+      .catch(err => {
+        conn.setInnerConn({ sink: drain(), source: error(err) })
+        callback(err)
+      })
 
     return conn
   }

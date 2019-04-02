@@ -1,11 +1,11 @@
 /* eslint-env mocha */
 'use strict'
 
-const tests = require('interface-transport')
+const tests = require('./compliance')
 const multiaddr = require('multiaddr')
 const WS = require('../../src/adapter')
 
-describe('compliance', () => {
+describe('adapter compliance', () => {
   tests({
     setup (callback) {
       let ws = new WS()

@@ -7,12 +7,13 @@ const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
 const multiaddr = require('multiaddr')
-const pull = require('pull-stream')
-const goodbye = require('pull-goodbye')
+const goodbye = require('it-goodbye')
+const { collect, consume } = require('streaming-iterables')
+const pipe = require('it-pipe')
 
 const WS = require('../src')
 
-require('./compliance.node')
+// require('./compliance.node')
 
 describe('instantiate the transport', () => {
   it('create', () => {
@@ -180,49 +181,31 @@ describe('dial', () => {
     let listener
     const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws')
 
-    beforeEach((done) => {
+    beforeEach(() => {
       ws = new WS()
-      listener = ws.createListener((conn) => {
-        pull(conn, conn)
-      })
-      listener.listen(ma, done)
+      listener = ws.createListener(conn => pipe(conn, conn))
+      return listener.listen(ma)
     })
 
-    afterEach((done) => {
-      listener.close(done)
+    afterEach(() => listener.close())
+
+    it('dial', async () => {
+      const conn = await ws.dial(ma)
+      const s = goodbye({ source: ['hey'], sink: collect })
+
+      const result = await pipe(s, conn, s)
+
+      expect(result).to.be.eql(['hey'])
     })
 
-    it('dial', (done) => {
-      const conn = ws.dial(ma)
-
-      const s = goodbye({
-        source: pull.values(['hey']),
-        sink: pull.collect((err, result) => {
-          expect(err).to.not.exist()
-
-          expect(result).to.be.eql(['hey'])
-          done()
-        })
-      })
-
-      pull(s, conn, s)
-    })
-
-    it('dial with IPFS Id', (done) => {
+    it('dial with IPFS Id', async () => {
       const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-      const conn = ws.dial(ma)
+      const conn = await ws.dial(ma)
+      const s = goodbye({ source: ['hey'], sink: collect })
 
-      const s = goodbye({
-        source: pull.values(['hey']),
-        sink: pull.collect((err, result) => {
-          expect(err).to.not.exist()
+      const result = await pipe(s, conn, s)
 
-          expect(result).to.be.eql(['hey'])
-          done()
-        })
-      })
-
-      pull(s, conn, s)
+      expect(result).to.be.eql(['hey'])
     })
   })
 
@@ -231,49 +214,34 @@ describe('dial', () => {
     let listener
     const ma = multiaddr('/ip6/::1/tcp/9091')
 
-    beforeEach((done) => {
+    beforeEach(() => {
       ws = new WS()
-      listener = ws.createListener((conn) => {
-        pull(conn, conn)
-      })
-      listener.listen(ma, done)
+      listener = ws.createListener(conn => pipe(conn, conn))
+      return listener.listen(ma)
     })
 
-    afterEach((done) => {
-      listener.close(done)
+    afterEach(() => listener.close())
+
+    it('dial', async () => {
+      const conn = await ws.dial(ma)
+      const s = goodbye({ source: ['hey'], sink: collect })
+
+      const result = await pipe(s, conn, s)
+
+      expect(result).to.be.eql(['hey'])
     })
 
-    it('dial', (done) => {
-      const conn = ws.dial(ma)
-
-      const s = goodbye({
-        source: pull.values(['hey']),
-        sink: pull.collect((err, result) => {
-          expect(err).to.not.exist()
-
-          expect(result).to.be.eql(['hey'])
-          done()
-        })
-      })
-
-      pull(s, conn, s)
-    })
-
-    it('dial with IPFS Id', (done) => {
+    it('dial with IPFS Id', async () => {
       const ma = multiaddr('/ip6/::1/tcp/9091/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-      const conn = ws.dial(ma)
+      const conn = await ws.dial(ma)
 
       const s = goodbye({
-        source: pull.values(['hey']),
-        sink: pull.collect((err, result) => {
-          expect(err).to.not.exist()
-
-          expect(result).to.be.eql(['hey'])
-          done()
-        })
+        source: ['hey'],
+        sink: collect
       })
 
-      pull(s, conn, s)
+      const result = await pipe(s, conn, s)
+      expect(result).to.be.eql(['hey'])
     })
   })
 })
@@ -416,121 +384,28 @@ describe('filter addrs', () => {
 describe('valid Connection', () => {
   const ma = multiaddr('/ip4/127.0.0.1/tcp/9092/ws')
 
-  it('get observed addrs', (done) => {
+  it('get observed addrs', async () => {
     let dialerObsAddrs
     let listenerObsAddrs
 
     const ws = new WS()
 
-    const listener = ws.createListener((conn) => {
+    const listener = ws.createListener(async conn => {
       expect(conn).to.exist()
-
-      conn.getObservedAddrs((err, addrs) => {
-        expect(err).to.not.exist()
-        dialerObsAddrs = addrs
-      })
-
-      pull(conn, conn)
+      dialerObsAddrs = await conn.getObservedAddrs()
+      pipe(conn, conn)
     })
 
-    listener.listen(ma, () => {
-      const conn = ws.dial(ma)
+    await listener.listen(ma)
+    const conn = await ws.dial(ma)
 
-      pull(
-        pull.empty(),
-        conn,
-        pull.onEnd(onEnd)
-      )
+    await pipe([], conn, consume)
 
-      function onEnd () {
-        conn.getObservedAddrs((err, addrs) => {
-          expect(err).to.not.exist()
-          listenerObsAddrs = addrs
+    listenerObsAddrs = await conn.getObservedAddrs()
 
-          listener.close(onClose)
+    await listener.close()
 
-          function onClose () {
-            expect(listenerObsAddrs[0]).to.deep.equal(ma)
-            expect(dialerObsAddrs.length).to.equal(0)
-            done()
-          }
-        })
-      }
-    })
-  })
-
-  it('get Peer Info', (done) => {
-    const ws = new WS()
-
-    const listener = ws.createListener((conn) => {
-      expect(conn).to.exist()
-
-      conn.getPeerInfo((err, peerInfo) => {
-        expect(err).to.exist()
-      })
-
-      pull(conn, conn)
-    })
-
-    listener.listen(ma, () => {
-      const conn = ws.dial(ma)
-
-      pull(
-        pull.empty(),
-        conn,
-        pull.onEnd(onEnd)
-      )
-
-      function onEnd () {
-        conn.getPeerInfo((err, peerInfo) => {
-          expect(err).to.exist()
-          listener.close(done)
-        })
-      }
-    })
-  })
-
-  it('set Peer Info', (done) => {
-    const ws = new WS()
-
-    const listener = ws.createListener((conn) => {
-      expect(conn).to.exist()
-      conn.setPeerInfo('a')
-
-      conn.getPeerInfo((err, peerInfo) => {
-        expect(err).to.not.exist()
-        expect(peerInfo).to.equal('a')
-      })
-
-      pull(conn, conn)
-    })
-
-    listener.listen(ma, onListen)
-
-    function onListen () {
-      const conn = ws.dial(ma)
-      conn.setPeerInfo('b')
-
-      pull(
-        pull.empty(),
-        conn,
-        pull.onEnd(onEnd)
-      )
-
-      function onEnd () {
-        conn.getPeerInfo((err, peerInfo) => {
-          expect(err).to.not.exist()
-          expect(peerInfo).to.equal('b')
-          listener.close(done)
-        })
-      }
-    }
-  })
-})
-
-describe.skip('turbolence', () => {
-  it('dialer - emits error on the other end is terminated abruptly', (done) => {
-  })
-  it('listener - emits error on the other end is terminated abruptly', (done) => {
+    expect(listenerObsAddrs[0]).to.deep.equal(ma)
+    expect(dialerObsAddrs.length).to.equal(0)
   })
 })

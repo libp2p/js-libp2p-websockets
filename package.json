@@ -53,9 +53,13 @@
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
     "interface-transport": "~0.3.7",
+    "it-goodbye": "^1.0.0",
+    "it-pipe": "^1.0.0",
     "multiaddr": "^6.0.6",
     "pull-goodbye": "0.0.2",
-    "pull-stream": "^3.6.9"
+    "pull-serializer": "~0.3.2",
+    "pull-stream": "^3.6.9",
+    "streaming-iterables": "^4.0.2"
   },
   "contributors": [
     "Chris Campbell <christopher.d.campbell@gmail.com>",

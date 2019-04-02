@@ -14,14 +14,14 @@ const WS = require('../../src/adapter')
 
 require('./compliance.node')
 
-describe('instantiate the transport', () => {
+describe('adapter instantiate the transport', () => {
   it('create', () => {
     const ws = new WS()
     expect(ws).to.exist()
   })
 })
 
-describe('listen', () => {
+describe('adapter listen', () => {
   describe('ip4', () => {
     let ws
     const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws')
@@ -201,7 +201,7 @@ describe('listen', () => {
   })
 })
 
-describe('dial', () => {
+describe('adapter dial', () => {
   describe('ip4', () => {
     let ws
     let listener
@@ -305,7 +305,7 @@ describe('dial', () => {
   })
 })
 
-describe('filter addrs', () => {
+describe('adapter filter addrs', () => {
   let ws
 
   before(() => {
@@ -440,7 +440,7 @@ describe('filter addrs', () => {
   })
 })
 
-describe('valid Connection', () => {
+describe('adapter valid Connection', () => {
   const ma = multiaddr('/ip4/127.0.0.1/tcp/9092/ws')
 
   it('get observed addrs', (done) => {
@@ -552,12 +552,5 @@ describe('valid Connection', () => {
         })
       }
     }
-  })
-})
-
-describe.skip('turbolence', () => {
-  it('dialer - emits error on the other end is terminated abruptly', (done) => {
-  })
-  it('listener - emits error on the other end is terminated abruptly', (done) => {
   })
 })

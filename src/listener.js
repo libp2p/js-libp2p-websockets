@@ -5,6 +5,13 @@ const os = require('os')
 const createServer = require('it-ws/server')
 
 module.exports = (options, handler) => {
+  if (typeof options === 'function') {
+    handler = options
+    options = {}
+  }
+
+  options = options || {}
+
   const server = createServer(options, socket => {
     socket.getObservedAddrs = () => []
     handler(socket)

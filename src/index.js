@@ -9,9 +9,10 @@ const log = require('debug')('libp2p:websockets:transport')
 const createListener = require('./listener')
 
 class WebSockets {
-  dial (ma, options) {
+  async dial (ma, options) {
     log('dialing %s', ma)
     const socket = connect(toUri(ma), { binary: true })
+    await socket.connected()
     socket.getObservedAddrs = () => [ma]
     log('connected %s', ma)
     return socket

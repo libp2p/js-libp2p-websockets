@@ -55,7 +55,7 @@
     "interface-transport": "~0.3.6",
     "multiaddr": "^6.0.3",
     "pull-goodbye": "0.0.2",
-    "pull-stream": "^3.6.7"
+    "pull-stream": "^3.6.9"
   },
   "contributors": [
     "Chris Campbell <christopher.d.campbell@gmail.com>",

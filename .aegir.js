@@ -1,21 +1,24 @@
 'use strict'
 
 const multiaddr = require('multiaddr')
-const pull = require('pull-stream')
+const pipe = require('it-pipe')
 
 const WS = require('./src')
 
 let listener
 
 function boot (done) {
+  console.log('boot!')
   const ws = new WS()
   const ma = multiaddr('/ip4/127.0.0.1/tcp/9095/ws')
-  listener = ws.createListener((conn) => pull(conn, conn))
-  listener.listen(ma, done)
+  listener = ws.createListener(conn => pipe(conn, conn))
+  listener.listen(ma).then(() => done()).catch(done)
+  listener.on('error', console.error)
 }
 
 function shutdown (done) {
-  listener.close(done)
+  console.log('shutdown')
+  listener.close().then(done).catch(done)
 }
 
 module.exports = {

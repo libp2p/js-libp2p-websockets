@@ -13,7 +13,7 @@ const pipe = require('it-pipe')
 
 const WS = require('../src')
 
-// require('./compliance.node')
+require('./compliance.node')
 
 describe('instantiate the transport', () => {
   it('create', () => {

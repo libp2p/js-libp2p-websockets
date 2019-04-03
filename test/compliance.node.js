@@ -5,9 +5,9 @@ const tests = require('interface-transport')
 const multiaddr = require('multiaddr')
 const WS = require('../src')
 
-describe('compliance', () => {
+describe('adapter compliance', () => {
   tests({
-    setup (callback) {
+    async setup () {
       const ws = new WS()
       const addrs = [
         multiaddr('/ip4/127.0.0.1/tcp/9091/ws'),
@@ -15,10 +15,8 @@ describe('compliance', () => {
         multiaddr('/dns4/ipfs.io/tcp/9092/ws'),
         multiaddr('/dns4/ipfs.io/tcp/9092/wss')
       ]
-      callback(null, ws, addrs)
+      return { transport: ws, addrs }
     },
-    teardown (callback) {
-      callback()
-    }
+    async teardown () {}
   })
 })

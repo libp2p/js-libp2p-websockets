@@ -12,10 +12,10 @@ module.exports = (options, handler) => {
 
   options = options || {}
 
-  const server = createServer(options, socket => {
+  const server = createServer(options, handler ? socket => {
     socket.getObservedAddrs = () => []
     handler(socket)
-  })
+  } : null)
 
   let listeningMultiaddr
 

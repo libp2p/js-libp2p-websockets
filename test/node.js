@@ -195,7 +195,7 @@ describe('dial', () => {
 
       const result = await pipe(s, conn, s)
 
-      expect(result).to.be.eql(['hey'])
+      expect(result).to.be.eql([Buffer.from('hey')])
     })
 
     it('dial with IPFS Id', async () => {
@@ -205,7 +205,7 @@ describe('dial', () => {
 
       const result = await pipe(s, conn, s)
 
-      expect(result).to.be.eql(['hey'])
+      expect(result).to.be.eql([Buffer.from('hey')])
     })
   })
 
@@ -228,7 +228,7 @@ describe('dial', () => {
 
       const result = await pipe(s, conn, s)
 
-      expect(result).to.be.eql(['hey'])
+      expect(result).to.be.eql([Buffer.from('hey')])
     })
 
     it('dial with IPFS Id', async () => {
@@ -241,7 +241,7 @@ describe('dial', () => {
       })
 
       const result = await pipe(s, conn, s)
-      expect(result).to.be.eql(['hey'])
+      expect(result).to.be.eql([Buffer.from('hey')])
     })
   })
 })

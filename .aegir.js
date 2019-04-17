@@ -2,13 +2,11 @@
 
 const multiaddr = require('multiaddr')
 const pipe = require('it-pipe')
-
 const WS = require('./src')
 
 let listener
 
 function boot (done) {
-  console.log('boot!')
   const ws = new WS()
   const ma = multiaddr('/ip4/127.0.0.1/tcp/9095/ws')
   listener = ws.createListener(conn => pipe(conn, conn))
@@ -17,7 +15,6 @@ function boot (done) {
 }
 
 function shutdown (done) {
-  console.log('shutdown')
   listener.close().then(done).catch(done)
 }
 

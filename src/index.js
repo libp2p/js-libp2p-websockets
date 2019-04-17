@@ -11,7 +11,7 @@ const createListener = require('./listener')
 class WebSockets {
   async dial (ma, options) {
     log('dialing %s', ma)
-    const socket = connect(toUri(ma), { binary: true })
+    const socket = connect(toUri(ma), Object.assign({ binary: true }, options))
     await socket.connected()
     socket.getObservedAddrs = () => [ma]
     log('connected %s', ma)

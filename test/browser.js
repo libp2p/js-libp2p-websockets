@@ -13,7 +13,7 @@ const { collect, take } = require('streaming-iterables')
 
 const WS = require('../src')
 
-// require('./adapter/browser')
+require('./adapter/browser')
 
 describe('libp2p-websockets', () => {
   const ma = multiaddr('/ip4/127.0.0.1/tcp/9095/ws')
@@ -26,7 +26,7 @@ describe('libp2p-websockets', () => {
   })
 
   it('echo', async () => {
-    const message = 'Hello World!'
+    const message = Buffer.from('Hello World!')
     const s = goodbye({ source: [message], sink: collect })
 
     const results = await pipe(s, conn, s)
@@ -60,8 +60,8 @@ describe('libp2p-websockets', () => {
       expect(result).to.have.length(20000)
     })
   })
-})
 
-it('.createServer throws in browser', () => {
-  expect(new WS().createListener).to.throw()
+  it('.createServer throws in browser', () => {
+    expect(new WS().createListener).to.throw()
+  })
 })

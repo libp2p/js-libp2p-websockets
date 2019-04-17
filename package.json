@@ -53,7 +53,7 @@
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "interface-transport": "github:libp2p/interface-transport#feat/async-await",
-    "it-goodbye": "^1.0.0",
+    "it-goodbye": "^2.0.0",
     "it-pipe": "^1.0.0",
     "multiaddr": "^6.0.3",
     "pull-goodbye": "0.0.2",

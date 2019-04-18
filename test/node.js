@@ -237,20 +237,6 @@ describe('dial', () => {
 
       throw new Error('connection was not aborted')
     })
-
-    it('should be abortable before connect', async () => {
-      const controller = new AbortController()
-      controller.abort() // Abort before connect
-
-      try {
-        await ws.dial(ma, { signal: controller.signal })
-      } catch (err) {
-        expect(err.type).to.equal('aborted')
-        return
-      }
-
-      throw new Error('connection was not aborted')
-    })
   })
 
   describe('ip6', () => {

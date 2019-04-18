@@ -6,8 +6,8 @@ const withIs = require('class-is')
 const toUri = require('multiaddr-to-uri')
 const log = require('debug')('libp2p:websockets:transport')
 const abortable = require('abortable-iterator')
+const { AbortError } = require('interface-transport')
 const createListener = require('./listener')
-const { AbortError } = abortable
 
 class WebSockets {
   async dial (ma, options) {

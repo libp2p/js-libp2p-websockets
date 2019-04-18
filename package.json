@@ -56,9 +56,6 @@
     "it-goodbye": "^2.0.0",
     "it-pipe": "^1.0.0",
     "multiaddr": "^6.0.6",
-    "pull-goodbye": "0.0.2",
-    "pull-serializer": "~0.3.2",
-    "pull-stream": "^3.6.9",
     "streaming-iterables": "^4.0.2"
   },
   "contributors": [

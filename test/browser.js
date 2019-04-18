@@ -13,8 +13,6 @@ const { collect, take } = require('streaming-iterables')
 
 const WS = require('../src')
 
-require('./adapter/browser')
-
 describe('libp2p-websockets', () => {
   const ma = multiaddr('/ip4/127.0.0.1/tcp/9095/ws')
   let ws

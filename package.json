@@ -54,7 +54,7 @@
     "aegir": "^18.2.1",
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
-    "interface-transport": "github:libp2p/interface-transport#feat/async-await",
+    "interface-transport": "github:libp2p/interface-transport#master",
     "it-goodbye": "^2.0.0",
     "it-pipe": "^1.0.0",
     "multiaddr": "^6.0.6",

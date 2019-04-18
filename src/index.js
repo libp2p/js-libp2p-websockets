@@ -28,8 +28,8 @@ class WebSockets {
     let onAbort
     const abort = new Promise((resolve, reject) => {
       onAbort = () => {
+        reject(new AbortError())
         socket.close()
-        reject(new AbortError('connection aborted'))
       }
 
       // Already aborted?

@@ -2,7 +2,7 @@
 
 const multiaddr = require('multiaddr')
 const os = require('os')
-const createServer = require('it-ws/server')
+const { createServer } = require('it-ws')
 
 module.exports = (options, handler) => {
   if (typeof options === 'function') {

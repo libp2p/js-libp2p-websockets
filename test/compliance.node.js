@@ -5,7 +5,7 @@ const tests = require('interface-transport')
 const multiaddr = require('multiaddr')
 const WS = require('../src')
 
-describe('adapter compliance', () => {
+describe('compliance', () => {
   tests({
     async setup () {
       const ws = new WS()

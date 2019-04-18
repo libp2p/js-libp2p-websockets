@@ -30,7 +30,7 @@ module.exports = (options, handler) => {
     return listen(ma.toOptions())
   }
 
-  server.getAddrs = async () => {
+  server.getAddrs = () => {
     const multiaddrs = []
     const address = server.address()
 

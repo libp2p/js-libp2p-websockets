@@ -10,6 +10,7 @@ const multiaddr = require('multiaddr')
 const goodbye = require('it-goodbye')
 const { collect, consume } = require('streaming-iterables')
 const pipe = require('it-pipe')
+const AbortController = require('abort-controller')
 
 const WS = require('../src')
 
@@ -206,6 +207,49 @@ describe('dial', () => {
       const result = await pipe(s, conn, s)
 
       expect(result).to.be.eql([Buffer.from('hey')])
+    })
+
+    it('should be abortable after connect', async () => {
+      const controller = new AbortController()
+      const conn = await ws.dial(ma, { signal: controller.signal })
+      const s = goodbye({
+        source: {
+          [Symbol.asyncIterator] () {
+            return this
+          },
+          next () {
+            return new Promise(resolve => {
+              setTimeout(() => resolve(Math.random()), 1000)
+            })
+          }
+        },
+        sink: consume
+      })
+
+      setTimeout(() => controller.abort(), 500)
+
+      try {
+        await pipe(s, conn, s)
+      } catch (err) {
+        expect(err.type).to.equal('aborted')
+        return
+      }
+
+      throw new Error('connection was not aborted')
+    })
+
+    it('should be abortable before connect', async () => {
+      const controller = new AbortController()
+      controller.abort() // Abort before connect
+
+      try {
+        await ws.dial(ma, { signal: controller.signal })
+      } catch (err) {
+        expect(err.type).to.equal('aborted')
+        return
+      }
+
+      throw new Error('connection was not aborted')
     })
   })
 

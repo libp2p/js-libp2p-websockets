@@ -46,7 +46,7 @@ module.exports = (options, handler) => {
     // we need to capture from the passed multiaddr
     if (listeningMultiaddr.toString().indexOf('ip4') !== -1) {
       let m = listeningMultiaddr.decapsulate('tcp')
-      m = m.encapsulate('/tcp/' + address.port + '/ws')
+      m = m.encapsulate('/tcp/' + address.port + '/ws/' + listeningMultiaddr.getValue(477))
       if (listeningMultiaddr.getPeerId()) {
         m = m.encapsulate('/ipfs/' + ipfsId)
       }

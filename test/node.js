@@ -24,7 +24,7 @@ describe('instantiate the transport', () => {
 describe('listen', () => {
   describe('ip4', () => {
     let ws
-    const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws')
+    const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/libp2pEndpoint')
 
     beforeEach(() => {
       ws = new WS()
@@ -60,7 +60,7 @@ describe('listen', () => {
     })
 
     it('listen on addr with /ipfs/QmHASH', (done) => {
-      const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const listener = ws.createListener((conn) => { })
 
@@ -96,7 +96,7 @@ describe('listen', () => {
     })
 
     it('getAddrs on port 0 listen', (done) => {
-      const addr = multiaddr(`/ip4/127.0.0.1/tcp/0/ws`)
+      const addr = multiaddr(`/ip4/127.0.0.1/tcp/0/ws/libp2pEndpoint`)
       const listener = ws.createListener((conn) => {
       })
       listener.listen(addr, () => {
@@ -110,7 +110,7 @@ describe('listen', () => {
     })
 
     it('getAddrs from listening on 0.0.0.0', (done) => {
-      const addr = multiaddr(`/ip4/0.0.0.0/tcp/9003/ws`)
+      const addr = multiaddr(`/ip4/0.0.0.0/tcp/9003/ws/libp2pEndpoint`)
       const listener = ws.createListener((conn) => {
       })
       listener.listen(addr, () => {
@@ -123,13 +123,13 @@ describe('listen', () => {
     })
 
     it('getAddrs from listening on 0.0.0.0 and port 0', (done) => {
-      const addr = multiaddr(`/ip4/0.0.0.0/tcp/0/ws`)
+      const addr = multiaddr(`/ip4/0.0.0.0/tcp/0/ws/libp2pEndpoint`)
       const listener = ws.createListener((conn) => {
       })
       listener.listen(addr, () => {
         listener.getAddrs((err, addrs) => {
           expect(err).to.not.exist()
-          expect(addrs.map((a) => a.toOptions().host)).to.not.include('0.0.0.0')
+          expect(addrs.map((a) => a.toOptions().host)).to.not.include('0.0.0.0/libp2pEndpoint')
           expect(addrs.map((a) => a.toOptions().port)).to.not.include('0')
           listener.close(done)
         })
@@ -137,7 +137,7 @@ describe('listen', () => {
     })
 
     it('getAddrs preserves IPFS Id', (done) => {
-      const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const listener = ws.createListener((conn) => { })
 
@@ -154,7 +154,7 @@ describe('listen', () => {
 
   describe('ip6', () => {
     let ws
-    const ma = multiaddr('/ip6/::1/tcp/9091/ws')
+    const ma = multiaddr('/ip6/::1/tcp/9091/ws/libp2pEndpoint')
 
     beforeEach(() => {
       ws = new WS()
@@ -190,7 +190,7 @@ describe('listen', () => {
     })
 
     it('listen on addr with /ipfs/QmHASH', (done) => {
-      const ma = multiaddr('/ip6/::1/tcp/9091/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma = multiaddr('/ip6/::1/tcp/9091/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const listener = ws.createListener((conn) => { })
 
@@ -205,7 +205,7 @@ describe('dial', () => {
   describe('ip4', () => {
     let ws
     let listener
-    const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws')
+    const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws/ipfsEndpoint')
 
     beforeEach((done) => {
       ws = new WS()
@@ -236,7 +236,7 @@ describe('dial', () => {
     })
 
     it('dial with IPFS Id', (done) => {
-      const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma = multiaddr('/ip4/127.0.0.1/tcp/9091/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
       const conn = ws.dial(ma)
 
       const s = goodbye({
@@ -287,7 +287,7 @@ describe('dial', () => {
     })
 
     it('dial with IPFS Id', (done) => {
-      const ma = multiaddr('/ip6/::1/tcp/9091/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma = multiaddr('/ip6/::1/tcp/9091/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
       const conn = ws.dial(ma)
 
       const s = goodbye({
@@ -324,8 +324,8 @@ describe('filter addrs', () => {
     })
 
     it('should filter correct ipv4 addresses', function () {
-      const ma1 = multiaddr('/ip4/127.0.0.1/tcp/80/ws')
-      const ma2 = multiaddr('/ip4/127.0.0.1/tcp/443/wss')
+      const ma1 = multiaddr('/ip4/127.0.0.1/tcp/80/ws/libp2pEndpoint')
+      const ma2 = multiaddr('/ip4/127.0.0.1/tcp/443/wss/libp2pEndpoint')
 
       const valid = ws.filter([ma1, ma2])
       expect(valid.length).to.equal(2)
@@ -334,8 +334,8 @@ describe('filter addrs', () => {
     })
 
     it('should filter correct ipv4 addresses with ipfs id', function () {
-      const ma1 = multiaddr('/ip4/127.0.0.1/tcp/80/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-      const ma2 = multiaddr('/ip4/127.0.0.1/tcp/80/wss/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma1 = multiaddr('/ip4/127.0.0.1/tcp/80/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma2 = multiaddr('/ip4/127.0.0.1/tcp/80/wss/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const valid = ws.filter([ma1, ma2])
       expect(valid.length).to.equal(2)
@@ -344,8 +344,8 @@ describe('filter addrs', () => {
     })
 
     it('should filter correct ipv6 address', function () {
-      const ma1 = multiaddr('/ip6/::1/tcp/80/ws')
-      const ma2 = multiaddr('/ip6/::1/tcp/443/wss')
+      const ma1 = multiaddr('/ip6/::1/tcp/80/ws/libp2pEndpoint')
+      const ma2 = multiaddr('/ip6/::1/tcp/443/wss/libp2pEndpoint')
 
       const valid = ws.filter([ma1, ma2])
       expect(valid.length).to.equal(2)
@@ -354,8 +354,8 @@ describe('filter addrs', () => {
     })
 
     it('should filter correct ipv6 addresses with ipfs id', function () {
-      const ma1 = multiaddr('/ip6/::1/tcp/80/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-      const ma2 = multiaddr('/ip6/::1/tcp/443/wss/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma1 = multiaddr('/ip6/::1/tcp/80/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma2 = multiaddr('/ip6/::1/tcp/443/wss/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const valid = ws.filter([ma1, ma2])
       expect(valid.length).to.equal(2)
@@ -364,9 +364,9 @@ describe('filter addrs', () => {
     })
 
     it('should filter correct dns address', function () {
-      const ma1 = multiaddr('/dnsaddr/ipfs.io/ws')
-      const ma2 = multiaddr('/dnsaddr/ipfs.io/tcp/80/ws')
-      const ma3 = multiaddr('/dnsaddr/ipfs.io/tcp/80/wss')
+      const ma1 = multiaddr('/dnsaddr/ipfs.io/ws/libp2pEndpoint')
+      const ma2 = multiaddr('/dnsaddr/ipfs.io/tcp/80/ws/libp2pEndpoint')
+      const ma3 = multiaddr('/dnsaddr/ipfs.io/tcp/80/wss/libp2pEndpoint')
 
       const valid = ws.filter([ma1, ma2, ma3])
       expect(valid.length).to.equal(3)
@@ -376,8 +376,8 @@ describe('filter addrs', () => {
     })
 
     it('should filter correct dns address with ipfs id', function () {
-      const ma1 = multiaddr('/dnsaddr/ipfs.io/tcp/80/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-      const ma2 = multiaddr('/dnsaddr/ipfs.io/tcp/443/wss/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma1 = multiaddr('/dnsaddr/ipfs.io/tcp/80/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma2 = multiaddr('/dnsaddr/ipfs.io/tcp/443/wss/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const valid = ws.filter([ma1, ma2])
       expect(valid.length).to.equal(2)
@@ -386,8 +386,8 @@ describe('filter addrs', () => {
     })
 
     it('should filter correct dns4 address', function () {
-      const ma1 = multiaddr('/dns4/ipfs.io/tcp/80/ws')
-      const ma2 = multiaddr('/dns4/ipfs.io/tcp/443/wss')
+      const ma1 = multiaddr('/dns4/ipfs.io/tcp/80/ws/libp2pEndpoint')
+      const ma2 = multiaddr('/dns4/ipfs.io/tcp/443/wss/libp2pEndpoint')
 
       const valid = ws.filter([ma1, ma2])
       expect(valid.length).to.equal(2)
@@ -396,8 +396,8 @@ describe('filter addrs', () => {
     })
 
     it('should filter correct dns6 address', function () {
-      const ma1 = multiaddr('/dns6/ipfs.io/tcp/80/ws')
-      const ma2 = multiaddr('/dns6/ipfs.io/tcp/443/wss')
+      const ma1 = multiaddr('/dns6/ipfs.io/tcp/80/ws/libp2pEndpoint')
+      const ma2 = multiaddr('/dns6/ipfs.io/tcp/443/wss/libp2pEndpoint')
 
       const valid = ws.filter([ma1, ma2])
       expect(valid.length).to.equal(2)
@@ -406,8 +406,8 @@ describe('filter addrs', () => {
     })
 
     it('should filter correct dns6 address with ipfs id', function () {
-      const ma1 = multiaddr('/dns6/ipfs.io/tcp/80/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
-      const ma2 = multiaddr('/dns6/ipfs.io/tcp/443/wss/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma1 = multiaddr('/dns6/ipfs.io/tcp/80/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma2 = multiaddr('/dns6/ipfs.io/tcp/443/wss/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const valid = ws.filter([ma1, ma2])
       expect(valid.length).to.equal(2)
@@ -416,11 +416,11 @@ describe('filter addrs', () => {
     })
 
     it('should filter mixed addresses', function () {
-      const ma1 = multiaddr('/dns6/ipfs.io/tcp/80/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma1 = multiaddr('/dns6/ipfs.io/tcp/80/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
       const ma2 = multiaddr('/ip4/127.0.0.1/tcp/9090')
       const ma3 = multiaddr('/ip4/127.0.0.1/udp/9090')
-      const ma4 = multiaddr('/dns6/ipfs.io/ws')
-      const mh5 = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw' +
+      const ma4 = multiaddr('/dns6/ipfs.io/ws/ipfsEndpoint')
+      const mh5 = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw' +
         '/p2p-circuit/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const valid = ws.filter([ma1, ma2, ma3, ma4, mh5])
@@ -431,7 +431,7 @@ describe('filter addrs', () => {
   })
 
   it('filter a single addr for this transport', (done) => {
-    const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+    const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfsEndpoint/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
     const valid = ws.filter(ma)
     expect(valid.length).to.equal(1)
@@ -441,7 +441,7 @@ describe('filter addrs', () => {
 })
 
 describe('valid Connection', () => {
-  const ma = multiaddr('/ip4/127.0.0.1/tcp/9092/ws')
+  const ma = multiaddr('/ip4/127.0.0.1/tcp/9092/ws/ipfsEndpoint')
 
   it('get observed addrs', (done) => {
     let dialerObsAddrs

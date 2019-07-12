@@ -9,7 +9,7 @@ let listener
 
 function boot (done) {
   const ws = new WS()
-  const ma = multiaddr('/ip4/127.0.0.1/tcp/9095/ws')
+  const ma = multiaddr('/ip4/127.0.0.1/tcp/9095/ws/libp2pEndpoint')
   listener = ws.createListener((conn) => pull(conn, conn))
   listener.listen(ma, done)
 }

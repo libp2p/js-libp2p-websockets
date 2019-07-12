@@ -10,10 +10,10 @@ describe('compliance', () => {
     setup (callback) {
       let ws = new WS()
       const addrs = [
-        multiaddr('/ip4/127.0.0.1/tcp/9091/ws'),
-        multiaddr('/ip4/127.0.0.1/tcp/9092/wss'),
-        multiaddr('/dns4/ipfs.io/tcp/9092/ws'),
-        multiaddr('/dns4/ipfs.io/tcp/9092/wss')
+        multiaddr('/ip4/127.0.0.1/tcp/9091/ws/libp2pEndpoint'),
+        multiaddr('/ip4/127.0.0.1/tcp/9092/wss/libp2pEndpoint'),
+        multiaddr('/dns4/ipfs.io/tcp/9092/ws/libp2pEndpoint'),
+        multiaddr('/dns4/ipfs.io/tcp/9092/wss/libp2pEndpoint')
       ]
       callback(null, ws, addrs)
     },

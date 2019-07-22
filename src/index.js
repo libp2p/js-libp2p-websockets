@@ -5,7 +5,7 @@ const mafmt = require('mafmt')
 const withIs = require('class-is')
 const toUri = require('multiaddr-to-uri')
 const log = require('debug')('libp2p:websockets:transport')
-const abortable = require('abortable-iterator')
+const Libp2pSocket = require('./socket')
 const { AbortError } = require('interface-transport')
 const createListener = require('./listener')
 
@@ -44,20 +44,7 @@ class WebSockets {
     }
 
     log('connected %s', ma)
-    return {
-      sink: async source => {
-        try {
-          await socket.sink(abortable(source, options.signal))
-        } catch (err) {
-          // Re-throw non-aborted errors
-          if (err.type !== 'aborted') throw err
-          // Otherwise, this is fine...
-          await socket.close()
-        }
-      },
-      source: abortable(socket.source, options.signal),
-      getObservedAddrs
-    }
+    return new Libp2pSocket(socket, ma, options)
   }
 
   createListener (options, handler) {

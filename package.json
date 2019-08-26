@@ -4,6 +4,7 @@
   "description": "JavaScript implementation of the WebSockets module that libp2p uses and that implements the interface-transport spec",
   "leadMaintainer": "Jacob Heun <jacobheun@gmail.com>",
   "main": "src/index.js",
+  "typings": "src/types.d.ts",
   "scripts": {
     "lint": "aegir lint",
     "build": "aegir build",
@@ -14,7 +15,9 @@
     "release-minor": "aegir release --type minor -t node -t browser",
     "release-major": "aegir release --type major -t node -t browser",
     "coverage": "aegir coverage",
-    "coverage-publish": "aegir coverage --provider coveralls"
+    "coverage-publish": "aegir coverage --provider coveralls",
+    "generate-typings": "./node_modules/.bin/jsdoc -c ./.jsdoc.json"
+
   },
   "browser": {
     "src/listener": "./src/listener.browser.js"
@@ -52,9 +55,12 @@
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
     "interface-transport": "~0.3.7",
+    "jsdoc": "^3.6.3",
     "multiaddr": "^6.0.6",
     "pull-goodbye": "0.0.2",
-    "pull-stream": "^3.6.9"
+    "pull-stream": "^3.6.9",
+    "tsd-jsdoc": "^2.3.1",
+    "typescript-definition-tester": "0.0.6"
   },
   "contributors": [
     "Chris Campbell <christopher.d.campbell@gmail.com>",

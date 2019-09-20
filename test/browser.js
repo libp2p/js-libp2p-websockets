@@ -13,13 +13,18 @@ const { collect, take } = require('streaming-iterables')
 
 const WS = require('../src')
 
+const mockUpgrader = {
+  upgradeInbound: maConn => maConn,
+  upgradeOutbound: maConn => maConn
+}
+
 describe('libp2p-websockets', () => {
   const ma = multiaddr('/ip4/127.0.0.1/tcp/9095/ws')
   let ws
   let conn
 
   beforeEach(async () => {
-    ws = new WS()
+    ws = new WS({ upgrader: mockUpgrader })
     conn = await ws.dial(ma)
   })
 
@@ -60,6 +65,6 @@ describe('libp2p-websockets', () => {
   })
 
   it('.createServer throws in browser', () => {
-    expect(new WS().createListener).to.throw()
+    expect(new WS({ upgrader: mockUpgrader }).createListener).to.throw()
   })
 })

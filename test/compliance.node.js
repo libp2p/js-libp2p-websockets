@@ -6,13 +6,13 @@ const multiaddr = require('multiaddr')
 const http = require('http')
 const WS = require('../src')
 
-describe('compliance', () => {
+describe('interface-transport compliance', () => {
   tests({
-    async setup () {
-      const ws = new WS()
+    async setup ({ upgrader }) { // eslint-disable-line require-await
+      const ws = new WS({ upgrader })
       const addrs = [
         multiaddr('/ip4/127.0.0.1/tcp/9091/ws'),
-        multiaddr('/ip4/127.0.0.1/tcp/9092/wss'),
+        multiaddr('/ip4/127.0.0.1/tcp/9092/ws'),
         multiaddr('/dns4/ipfs.io/tcp/9092/ws'),
         multiaddr('/dns4/ipfs.io/tcp/9092/wss')
       ]

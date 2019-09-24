@@ -11,9 +11,8 @@ const expect = chai.expect
 chai.use(dirtyChai)
 const multiaddr = require('multiaddr')
 const goodbye = require('it-goodbye')
-const { collect, consume } = require('streaming-iterables')
+const { collect } = require('streaming-iterables')
 const pipe = require('it-pipe')
-const AbortController = require('abort-controller')
 
 const WS = require('../src')
 
@@ -217,33 +216,31 @@ describe('dial', () => {
       expect(result).to.be.eql([Buffer.from('hey')])
     })
 
-    it('should be abortable after connect', async () => {
-      const controller = new AbortController()
-      const conn = await ws.dial(ma, { signal: controller.signal })
-      const s = goodbye({
-        source: {
-          [Symbol.asyncIterator] () {
-            return this
-          },
-          next () {
-            return new Promise(resolve => {
-              setTimeout(() => resolve(Math.random()), 1000)
-            })
-          }
-        },
-        sink: consume
-      })
+    it('should resolve port 0', async () => {
+      const ma = multiaddr('/ip4/127.0.0.1/tcp/0/ws')
+      const ws = new WS({ upgrader: mockUpgrader })
 
-      setTimeout(() => controller.abort(), 500)
+      // Create a Promise that resolves when a connection is handled
+      let handled
+      const handlerPromise = new Promise(resolve => { handled = resolve })
+      const handler = conn => handled(conn)
 
-      try {
-        await pipe(s, conn, s)
-      } catch (err) {
-        expect(err.type).to.equal('aborted')
-        return
-      }
+      const listener = ws.createListener(handler)
 
-      throw new Error('connection was not aborted')
+      // Listen on the multiaddr
+      await listener.listen(ma)
+
+      const localAddrs = listener.getAddrs()
+      expect(localAddrs.length).to.equal(1)
+
+      // Dial to that address
+      await ws.dial(localAddrs[0])
+
+      // Wait for the incoming dial to be handled
+      await handlerPromise
+
+      // close the listener
+      await listener.close()
     })
   })
 
@@ -444,38 +441,5 @@ describe('filter addrs', () => {
     expect(valid.length).to.equal(1)
     expect(valid[0]).to.deep.equal(ma)
     done()
-  })
-})
-
-describe.skip('valid localAddr and remoteAddr', () => {
-  const ma = multiaddr('/ip4/127.0.0.1/tcp/0/ws')
-
-  it('should resolve port 0', async () => {
-    const ws = new WS({ upgrader: mockUpgrader })
-
-    // Create a Promise that resolves when a connection is handled
-    let handled
-    const handlerPromise = new Promise(resolve => { handled = resolve })
-    const handler = conn => handled(conn)
-
-    const listener = ws.createListener(handler)
-
-    // Listen on the multiaddr
-    await listener.listen(ma)
-
-    const localAddrs = listener.getAddrs()
-    expect(localAddrs.length).to.equal(1)
-
-    // Dial to that address
-    const dialerConn = await ws.dial(localAddrs[0])
-
-    // Wait for the incoming dial to be handled
-    const listenerConn = await handlerPromise
-
-    // close the listener
-    await listener.close()
-
-    expect(dialerConn.localAddr.toString()).to.equal(listenerConn.remoteAddr.toString())
-    expect(dialerConn.remoteAddr.toString()).to.equal(listenerConn.localAddr.toString())
   })
 })

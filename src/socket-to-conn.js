@@ -4,13 +4,15 @@ const abortable = require('abortable-iterator')
 const { CLOSE_TIMEOUT } = require('./constants')
 const toMultiaddr = require('libp2p-utils/src/ip-port-to-multiaddr')
 
-const log = require('debug')('libp2p:websockets:socket')
+const pTimeout = require('p-timeout')
+
+const debug = require('debug')
+const log = debug('libp2p:websockets:socket')
+log.error = debug('libp2p:websockets:socket:error')
 
 // Convert a stream into a MultiaddrConnection
 // https://github.com/libp2p/interface-transport#multiaddrconnection
-module.exports = (stream, options = {}) => {
-  const socket = options.socket
-
+module.exports = (socket, options = {}) => {
   const maConn = {
     async sink (source) {
       if (options.signal) {
@@ -18,49 +20,40 @@ module.exports = (stream, options = {}) => {
       }
 
       try {
-        await stream.sink(source)
+        await socket.sink(source)
       } catch (err) {
-        // Re-throw non-aborted errors
-        if (err.type !== 'aborted') throw err
-        // Otherwise, this is fine...
-        await stream.close()
+        if (err.type !== 'aborted') {
+          log.error(err)
+        }
       }
     },
 
-    source: options.signal ? abortable(stream.source, options.signal) : stream.source,
+    source: options.signal ? abortable(socket.source, options.signal) : socket.source,
 
     conn: socket,
 
-    localAddr: undefined,
+    localAddr: options.localAddr || (socket.localAddress && socket.localPort
+      ? toMultiaddr(socket.localAddress, socket.localPort) : undefined),
 
     // If the remote address was passed, use it - it may have the peer ID encapsulated
-    remoteAddr: options.remoteAddr || toMultiaddr(stream.remoteAddress, stream.remotePort),
+    remoteAddr: options.remoteAddr || toMultiaddr(socket.remoteAddress, socket.remotePort),
 
     timeline: { open: Date.now() },
 
-    close () {
-      return new Promise(async (resolve) => { // eslint-disable-line no-async-promise-executor
-        const start = Date.now()
+    async close () {
+      const start = Date.now()
 
-        // Attempt to end the socket. If it takes longer to close than the
-        // timeout, destroy it manually.
-        const timeout = setTimeout(() => {
-          const { host, port } = maConn.remoteAddr.toOptions()
-          log('timeout closing socket to %s:%s after %dms, destroying it manually',
-            host, port, Date.now() - start)
+      try {
+        await pTimeout(socket.close(), CLOSE_TIMEOUT)
+      } catch (err) {
+        const { host, port } = maConn.remoteAddr.toOptions()
+        log('timeout closing socket to %s:%s after %dms, destroying it manually',
+          host, port, Date.now() - start)
 
-          socket.terminate()
-          maConn.timeline.close = Date.now()
-          return resolve()
-        }, CLOSE_TIMEOUT)
-
-        await stream.close()
-
-        clearTimeout(timeout)
+        socket.destroy()
+      } finally {
         maConn.timeline.close = Date.now()
-
-        resolve()
-      })
+      }
     }
   }
 

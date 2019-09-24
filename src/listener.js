@@ -7,16 +7,13 @@ const { createServer } = require('it-ws')
 
 const log = require('debug')('libp2p:websockets:listener')
 
-const { CODE_P2P } = require('./constants')
 const toConnection = require('./socket-to-conn')
 
 module.exports = ({ handler, upgrader }, options = {}) => {
   const listener = new EventEmitter()
 
-  const server = createServer(options, async (stream, req) => {
-    const maConn = toConnection(stream, {
-      socket: req.socket
-    })
+  const server = createServer(options, async (stream) => {
+    const maConn = toConnection(stream)
 
     log('new inbound connection %s', maConn.remoteAddr)
 
@@ -37,7 +34,7 @@ module.exports = ({ handler, upgrader }, options = {}) => {
   // Keep track of open connections to destroy in case of timeout
   server.__connections = []
 
-  let peerId, listeningMultiaddr
+  let listeningMultiaddr
 
   listener.close = () => {
     server.__connections.forEach(maConn => maConn.close())
@@ -46,11 +43,6 @@ module.exports = ({ handler, upgrader }, options = {}) => {
 
   listener.listen = (ma) => {
     listeningMultiaddr = ma
-    peerId = listeningMultiaddr.getPeerId()
-
-    if (peerId) {
-      ma = ma.decapsulateCode(CODE_P2P)
-    }
 
     return server.listen(ma.toOptions())
   }
@@ -96,10 +88,4 @@ module.exports = ({ handler, upgrader }, options = {}) => {
 
 function trackConn (server, maConn) {
   server.__connections.push(maConn)
-
-  const untrackConn = () => {
-    server.__connections = server.__connections.filter(c => c !== maConn)
-  }
-
-  maConn.conn.once('close', untrackConn)
 }

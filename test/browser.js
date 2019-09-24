@@ -47,7 +47,7 @@ describe('libp2p-websockets', () => {
     })
 
     it('many writes', async function () {
-      this.timeout(100000)
+      this.timeout(10000)
       const s = goodbye({
         source: pipe(
           {

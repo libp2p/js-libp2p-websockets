@@ -42,11 +42,12 @@
     "class-is": "^1.1.0",
     "debug": "^4.1.1",
     "err-code": "^2.0.0",
-    "it-ws": "vasco-santos/it-ws#feat/add-properties-and-functions-to-client-and-server",
+    "it-ws": "vasco-santos/it-ws#v2.1.1-rc.0",
     "libp2p-utils": "~0.1.0",
     "mafmt": "^7.0.0",
     "multiaddr": "^7.1.0",
-    "multiaddr-to-uri": "^5.0.0"
+    "multiaddr-to-uri": "^5.0.0",
+    "p-timeout": "^3.2.0"
   },
   "devDependencies": {
     "abort-controller": "^3.0.0",

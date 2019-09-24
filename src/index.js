@@ -37,8 +37,8 @@ class WebSockets {
   async dial (ma, options = {}) {
     log('dialing %s', ma)
 
-    const stream = await this._connect(ma, options)
-    const maConn = toConnection(stream, { socket: stream.socket, remoteAddr: ma, signal: options.signal })
+    const socket = await this._connect(ma, options)
+    const maConn = toConnection(socket, { remoteAddr: ma, signal: options.signal })
     log('new outbound connection %s', maConn.remoteAddr)
 
     const conn = await this._upgrader.upgradeOutbound(maConn)
@@ -51,7 +51,7 @@ class WebSockets {
    * @param {Multiaddr} ma
    * @param {object} [options]
    * @param {AbortSignal} [options.signal] Used to abort dial requests
-   * @returns {Promise<Socket>} Resolves a TCP Socket
+   * @returns {Promise<WebSocket>} Resolves a extended duplex iterable on top of a WebSocket
    */
   async _connect (ma, options = {}) {
     if (options.signal && options.signal.aborted) {
@@ -101,12 +101,11 @@ class WebSockets {
    * @param {function (Connection)} handler
    * @returns {Listener} A Websockets listener
    */
-  createListener (options, handler) {
+  createListener (options = {}, handler) {
     if (typeof options === 'function') {
       handler = options
       options = {}
     }
-    options = options || {}
 
     return createListener({ handler, upgrader: this._upgrader }, options)
   }
@@ -120,7 +119,7 @@ class WebSockets {
     multiaddrs = Array.isArray(multiaddrs) ? multiaddrs : [multiaddrs]
 
     return multiaddrs.filter((ma) => {
-      if (ma.protoNames().includes(CODE_CIRCUIT)) {
+      if (ma.protoCodes().includes(CODE_CIRCUIT)) {
         return false
       }
 

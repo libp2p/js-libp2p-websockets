@@ -97,7 +97,7 @@ describe('listen', () => {
     })
 
     it('getAddrs on port 0 listen', (done) => {
-      const addr = multiaddr(`/ip4/127.0.0.1/tcp/0/ws`)
+      const addr = multiaddr('/ip4/127.0.0.1/tcp/0/ws')
       const listener = ws.createListener((conn) => {
       })
       listener.listen(addr, () => {
@@ -111,7 +111,7 @@ describe('listen', () => {
     })
 
     it('getAddrs from listening on 0.0.0.0', (done) => {
-      const addr = multiaddr(`/ip4/0.0.0.0/tcp/9003/ws`)
+      const addr = multiaddr('/ip4/0.0.0.0/tcp/9003/ws')
       const listener = ws.createListener((conn) => {
       })
       listener.listen(addr, () => {
@@ -124,7 +124,7 @@ describe('listen', () => {
     })
 
     it('getAddrs from listening on 0.0.0.0 and port 0', (done) => {
-      const addr = multiaddr(`/ip4/0.0.0.0/tcp/0/ws`)
+      const addr = multiaddr('/ip4/0.0.0.0/tcp/0/ws')
       const listener = ws.createListener((conn) => {
       })
       listener.listen(addr, () => {

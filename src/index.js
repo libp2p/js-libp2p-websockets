@@ -55,7 +55,9 @@ class WebSockets {
         return false
       }
 
-      if (ma.protoNames().includes('ipfs')) {
+      if (typeof ma.decapsulateCode === 'function') {
+        ma = ma.decapsulateCode(421) // multiaddr 7
+      } else if (ma.protoNames().includes('ipfs')) {
         ma = ma.decapsulate('ipfs')
       }
 

@@ -53,6 +53,7 @@
     "dirty-chai": "^2.0.1",
     "interface-transport": "~0.3.7",
     "multiaddr": "^6.0.6",
+    "multiaddr7": "npm:multiaddr@^7.0.0",
     "pull-goodbye": "0.0.2",
     "pull-stream": "^3.6.9"
   },

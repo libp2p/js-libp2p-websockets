@@ -1,3 +1,13 @@
+<a name="0.12.4"></a>
+## [0.12.4](https://github.com/libp2p/js-libp2p-websockets/compare/v0.12.3...v0.12.4) (2019-09-30)
+
+
+### Bug Fixes
+
+* support multiaddr 7 ([#94](https://github.com/libp2p/js-libp2p-websockets/issues/94)) ([996c532](https://github.com/libp2p/js-libp2p-websockets/commit/996c532))
+
+
+
 <a name="0.12.3"></a>
 ## [0.12.3](https://github.com/libp2p/js-libp2p-websockets/compare/v0.12.2...v0.12.3) (2019-08-21)
 

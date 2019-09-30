@@ -7,6 +7,7 @@ const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
 const multiaddr = require('multiaddr')
+const multiaddr7 = require('multiaddr7')
 const pull = require('pull-stream')
 const goodbye = require('pull-goodbye')
 
@@ -96,7 +97,7 @@ describe('listen', () => {
     })
 
     it('getAddrs on port 0 listen', (done) => {
-      const addr = multiaddr(`/ip4/127.0.0.1/tcp/0/ws`)
+      const addr = multiaddr('/ip4/127.0.0.1/tcp/0/ws')
       const listener = ws.createListener((conn) => {
       })
       listener.listen(addr, () => {
@@ -110,7 +111,7 @@ describe('listen', () => {
     })
 
     it('getAddrs from listening on 0.0.0.0', (done) => {
-      const addr = multiaddr(`/ip4/0.0.0.0/tcp/9003/ws`)
+      const addr = multiaddr('/ip4/0.0.0.0/tcp/9003/ws')
       const listener = ws.createListener((conn) => {
       })
       listener.listen(addr, () => {
@@ -123,7 +124,7 @@ describe('listen', () => {
     })
 
     it('getAddrs from listening on 0.0.0.0 and port 0', (done) => {
-      const addr = multiaddr(`/ip4/0.0.0.0/tcp/0/ws`)
+      const addr = multiaddr('/ip4/0.0.0.0/tcp/0/ws')
       const listener = ws.createListener((conn) => {
       })
       listener.listen(addr, () => {
@@ -138,6 +139,21 @@ describe('listen', () => {
 
     it('getAddrs preserves IPFS Id', (done) => {
       const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+
+      const listener = ws.createListener((conn) => { })
+
+      listener.listen(ma, () => {
+        listener.getAddrs((err, addrs) => {
+          expect(err).to.not.exist()
+          expect(addrs.length).to.equal(1)
+          expect(addrs[0]).to.deep.equal(ma)
+          listener.close(done)
+        })
+      })
+    })
+
+    it('getAddrs preserves p2p Id', (done) => {
+      const ma = multiaddr7('/ip4/127.0.0.1/tcp/9090/ws/p2p/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const listener = ws.createListener((conn) => { })
 
@@ -191,6 +207,16 @@ describe('listen', () => {
 
     it('listen on addr with /ipfs/QmHASH', (done) => {
       const ma = multiaddr('/ip6/::1/tcp/9091/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+
+      const listener = ws.createListener((conn) => { })
+
+      listener.listen(ma, () => {
+        listener.close(done)
+      })
+    })
+
+    it('listen on addr with /p2p/QmHASH', (done) => {
+      const ma = multiaddr7('/ip6/::1/tcp/9091/ws/p2p/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const listener = ws.createListener((conn) => { })
 
@@ -336,6 +362,16 @@ describe('filter addrs', () => {
     it('should filter correct ipv4 addresses with ipfs id', function () {
       const ma1 = multiaddr('/ip4/127.0.0.1/tcp/80/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
       const ma2 = multiaddr('/ip4/127.0.0.1/tcp/80/wss/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+
+      const valid = ws.filter([ma1, ma2])
+      expect(valid.length).to.equal(2)
+      expect(valid[0]).to.deep.equal(ma1)
+      expect(valid[1]).to.deep.equal(ma2)
+    })
+
+    it('should filter correct ipv4 addresses with p2p id', function () {
+      const ma1 = multiaddr7('/ip4/127.0.0.1/tcp/80/ws/p2p/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      const ma2 = multiaddr7('/ip4/127.0.0.1/tcp/80/wss/p2p/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
 
       const valid = ws.filter([ma1, ma2])
       expect(valid.length).to.equal(2)

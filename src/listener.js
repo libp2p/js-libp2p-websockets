@@ -25,10 +25,6 @@ module.exports = (options, handler) => {
     callback = callback || noop
     listeningMultiaddr = ma
 
-    if (ma.protoNames().includes('ipfs')) {
-      ma = ma.decapsulate('ipfs')
-    }
-
     listener._listen(ma.toOptions(), callback)
   }
 

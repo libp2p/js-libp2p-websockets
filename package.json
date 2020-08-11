@@ -46,7 +46,7 @@
     "libp2p-utils": "^0.2.0",
     "mafmt": "^8.0.0",
     "multiaddr": "^8.0.0",
-    "multiaddr-to-uri": "multiformats/js-multiaddr-to-uri#chore/update-deps",
+    "multiaddr-to-uri": "^6.0.0",
     "p-timeout": "^3.2.0"
   },
   "devDependencies": {

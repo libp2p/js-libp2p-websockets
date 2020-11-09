@@ -35,7 +35,25 @@
 > npm i libp2p-websockets
 ```
 
-### Example
+### Constructor properties
+
+```js
+const WS = require('libp2p-websockets')
+
+const properties = {
+  upgrader,
+  filter
+}
+
+const ws = new WS(properties)
+```
+
+| Name | Type | Description | Default |
+|------|------|-------------|---------|
+| upgrader | [`Upgrader`](https://github.com/libp2p/interface-transport#upgrader) | connection upgrader object with `upgradeOutbound` and `upgradeInbound` | **REQUIRED** |
+| filter | `(multiaddrs: Array<Multiaddr>) => Array<Multiaddr>` | override transport addresses filter | **Browser:** DNS+WSS multiaddrs / **Node.js:** DNS+{WS, WSS} multiaddrs |
+
+### Base Example
 
 ```js
 const WS = require('libp2p-websockets')
@@ -68,6 +86,26 @@ console.log(`Value: ${values.toString()}`)
 // Close connection after reading
 await listener.close()
 ```
+
+### Custom filters Example
+
+You can create your own address filters for this transports, or rely in the filters [provided](./src/filters.js).
+
+```js
+const WS = require('libp2p-websockets')
+const filters = require('libp2p-websockets/src/filters')
+
+const ws = new WS({ upgrader, filter: filters.all })
+```
+
+The available filters are:
+
+- `filters.all`
+  - Returns all TCP and DNS based addresses, both with `ws` or `wss`.
+- `filters.dnsWss`
+  - Returns all DNS based addresses with `wss`.
+- `filters.dnsWsOrWss`
+  - Returns all DNS based addresses, both with `ws` or `wss`.
 
 ## API
 

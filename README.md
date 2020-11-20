@@ -53,7 +53,32 @@ const ws = new WS(properties)
 | upgrader | [`Upgrader`](https://github.com/libp2p/interface-transport#upgrader) | connection upgrader object with `upgradeOutbound` and `upgradeInbound` | **REQUIRED** |
 | filter | `(multiaddrs: Array<Multiaddr>) => Array<Multiaddr>` | override transport addresses filter | **Browser:** DNS+WSS multiaddrs / **Node.js:** DNS+{WS, WSS} multiaddrs |
 
-### Base Example
+## Libp2p Usage Example
+
+```js
+const Libp2p = require('libp2p')
+const Websockets = require('libp2p-websockets')
+const filters = require('libp2p-websockets/src/filters')
+
+const transportKey = Websockets.prototype[Symbol.toStringTag]
+const node = await Libp2p.create({
+  modules: {
+    transport: [WebRTCStar],
+    // ... other mandatory modules
+  },
+  config: {
+    transport: {
+      [transportKey]: { // Transport properties -- Libp2p upgrader is automatically added
+        filter: filters.dnsWsOrWss
+      }
+    }
+  }
+})
+```
+
+For more information see [libp2p/js-libp2p/doc/CONFIGURATION.md#customizing-transports](https://github.com/libp2p/js-libp2p/blob/master/doc/CONFIGURATION.md#customizing-transports).
+
+## Base Example
 
 ```js
 const WS = require('libp2p-websockets')
@@ -87,7 +112,7 @@ console.log(`Value: ${values.toString()}`)
 await listener.close()
 ```
 
-### Custom filters Example
+## Custom filters Example
 
 You can create your own address filters for this transports, or rely in the filters [provided](./src/filters.js).
 

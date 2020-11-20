@@ -8,6 +8,7 @@ const fs = require('fs')
 const { expect } = require('aegir/utils/chai')
 const multiaddr = require('multiaddr')
 const goodbye = require('it-goodbye')
+const isLoopbackAddr = require('is-loopback-addr')
 const { collect } = require('streaming-iterables')
 const pipe = require('it-pipe')
 const BufferList = require('bl/BufferList')
@@ -251,6 +252,36 @@ describe('dial', () => {
     })
   })
 
+  describe('ip4 no loopback', () => {
+    let ws
+    let listener
+    const ma = multiaddr('/ip4/0.0.0.0/tcp/0/ws')
+
+    beforeEach(() => {
+      ws = new WS({ upgrader: mockUpgrader })
+      listener = ws.createListener(conn => pipe(conn, conn))
+      return listener.listen(ma)
+    })
+
+    afterEach(() => listener.close())
+
+    it('dial', async () => {
+      const addrs = listener.getAddrs().filter((ma) => {
+        const { address } = ma.nodeAddress()
+
+        return !isLoopbackAddr(address)
+      })
+
+      // Dial first no loopback address
+      const conn = await ws.dial(addrs[0])
+      const s = goodbye({ source: ['hey'], sink: collect })
+
+      const result = await pipe(s, conn, s)
+
+      expect(result).to.be.eql([uint8ArrayFromString('hey')])
+    })
+  })
+
   describe('ip4 with wss', () => {
     let ws
     let listener
@@ -338,16 +369,6 @@ describe('filter addrs', () => {
       const ma2 = multiaddr('/ip4/127.0.0.1/udp/9090')
       const ma3 = multiaddr('/ip6/::1/tcp/80')
       const ma4 = multiaddr('/dnsaddr/ipfs.io/tcp/80')
-
-      const valid = ws.filter([ma1, ma2, ma3, ma4])
-      expect(valid.length).to.equal(0)
-    })
-
-    it('should filter out no DNS websocket addresses', function () {
-      const ma1 = multiaddr('/ip4/127.0.0.1/tcp/80/ws')
-      const ma2 = multiaddr('/ip4/127.0.0.1/tcp/443/wss')
-      const ma3 = multiaddr('/ip6/::1/tcp/80/ws')
-      const ma4 = multiaddr('/ip6/::1/tcp/443/wss')
 
       const valid = ws.filter([ma1, ma2, ma3, ma4])
       expect(valid.length).to.equal(0)

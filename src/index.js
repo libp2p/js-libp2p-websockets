@@ -134,7 +134,7 @@ class WebSockets {
       return filters.dnsWss(multiaddrs)
     }
 
-    return filters.dnsWsOrWss(multiaddrs)
+    return filters.all(multiaddrs)
   }
 }
 

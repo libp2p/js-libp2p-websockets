@@ -5,7 +5,9 @@ const withIs = require('class-is')
 const toUri = require('multiaddr-to-uri')
 const { AbortError } = require('abortable-iterator')
 
-const log = require('debug')('libp2p:websockets')
+const debug = require('debug')
+const log = debug('libp2p:websockets')
+log.error = debug('libp2p:websockets:error')
 const env = require('ipfs-utils/src/env')
 
 const createListener = require('./listener')
@@ -65,8 +67,23 @@ class WebSockets {
 
     const rawSocket = connect(toUri(ma), Object.assign({ binary: true }, options))
 
+    const errorPromise = new Promise((resolve, reject) => {
+      const errfn = (err) => {
+        const msg = `connection error: ${err.message}`
+        log.error(msg)
+
+        reject(err)
+      }
+
+      if (rawSocket.socket.on) {
+        rawSocket.socket.on('error', errfn)
+      } else {
+        rawSocket.socket.onerror = errfn
+      }
+    })
+
     if (!options.signal) {
-      await rawSocket.connected()
+      await Promise.race([rawSocket.connected(), errorPromise])
 
       log('connected %s', ma)
       return rawSocket
@@ -86,7 +103,7 @@ class WebSockets {
     })
 
     try {
-      await Promise.race([abort, rawSocket.connected()])
+      await Promise.race([abort, errorPromise, rawSocket.connected()])
     } finally {
       options.signal.removeEventListener('abort', onAbort)
     }

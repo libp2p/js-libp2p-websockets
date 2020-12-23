@@ -224,6 +224,12 @@ describe('dial', () => {
       expect(result).to.be.eql([uint8ArrayFromString('hey')])
     })
 
+    it('dial should throw on error', async () => {
+      const ma = multiaddr('/ip4/127.0.0.1')
+
+      await expect(ws.dial(ma)).to.eventually.be.rejected()
+    })
+
     it('should resolve port 0', async () => {
       const ma = multiaddr('/ip4/127.0.0.1/tcp/0/ws')
       const ws = new WS({ upgrader: mockUpgrader })

@@ -45,6 +45,8 @@ module.exports = (stream, options = {}) => {
 
     timeline: { open: Date.now() },
 
+    transportTag: 'WebSockets',
+
     async close () {
       const start = Date.now()
 

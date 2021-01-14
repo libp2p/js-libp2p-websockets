@@ -94,7 +94,9 @@ class WebSockets {
     const abort = new Promise((resolve, reject) => {
       onAbort = () => {
         reject(new AbortError())
-        rawSocket.close()
+        setTimeout(() => {
+          rawSocket.close()
+        }, 0)
       }
 
       // Already aborted?

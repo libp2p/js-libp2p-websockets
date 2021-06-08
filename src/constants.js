@@ -10,3 +10,5 @@ exports.CODE_WSS = 478
 
 // Time to wait for a connection to close gracefully before destroying it manually
 exports.CLOSE_TIMEOUT = 2000
+
+exports.ONION = 445

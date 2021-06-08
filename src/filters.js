@@ -6,11 +6,16 @@ const {
   CODE_P2P,
   CODE_TCP,
   CODE_WS,
-  CODE_WSS
+  CODE_WSS,
+  ONION
 } = require('./constants')
 
 module.exports = {
   all: (multiaddrs) => multiaddrs.filter((ma) => {
+    if (ma.protoCodes().includes(ONION)) {
+      return true
+    }
+
     if (ma.protoCodes().includes(CODE_CIRCUIT)) {
       return false
     }

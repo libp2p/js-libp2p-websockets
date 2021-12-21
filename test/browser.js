@@ -7,7 +7,7 @@ const { Multiaddr } = require('multiaddr')
 const pipe = require('it-pipe')
 const goodbye = require('it-goodbye')
 const { collect, take } = require('streaming-iterables')
-const uint8ArrayFromString = require('uint8arrays/from-string')
+const { fromString: uint8ArrayFromString } = require('uint8arrays/from-string')
 
 const WS = require('../src')
 

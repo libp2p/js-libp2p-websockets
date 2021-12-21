@@ -13,7 +13,7 @@ const isLoopbackAddr = require('is-loopback-addr')
 const { collect } = require('streaming-iterables')
 const pipe = require('it-pipe')
 const BufferList = require('bl/BufferList')
-const uint8ArrayFromString = require('uint8arrays/from-string')
+const { fromString: uint8ArrayFromString } = require('uint8arrays/from-string')
 
 const WS = require('../src')
 const filters = require('../src/filters')

@@ -53,15 +53,15 @@
   },
   "devDependencies": {
     "abort-controller": "^3.0.0",
-    "aegir": "^33.0.0",
+    "aegir": "^36.1.1",
     "bl": "^5.0.0",
     "is-loopback-addr": "^1.0.1",
     "it-goodbye": "^3.0.0",
     "it-pipe": "^1.1.0",
-    "libp2p-interfaces": "^1.0.0",
-    "libp2p-interfaces-compliance-tests": "^1.0.0",
+    "libp2p-interfaces": "^2.0.3",
+    "libp2p-interfaces-compliance-tests": "^2.0.4",
     "streaming-iterables": "^6.0.0",
-    "uint8arrays": "^2.1.2",
+    "uint8arrays": "^3.0.0",
     "util": "^0.12.3"
   },
   "contributors": [

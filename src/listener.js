@@ -8,6 +8,10 @@ const debug = require('debug')
 const log = debug('libp2p:websockets:listener')
 log.error = debug('libp2p:websockets:listener:error')
 
+/**
+ * @typedef {import('libp2p-interfaces/src/types').AbortOptions} AbortOptions
+ */
+
 const toConnection = require('./socket-to-conn')
 
 module.exports = ({ handler, upgrader }, options = {}) => {
@@ -19,7 +23,7 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     try {
       maConn = toConnection(stream)
       log('new inbound connection %s', maConn.remoteAddr)
-      conn = await upgrader.upgradeInbound(maConn)
+      conn = await upgrader.upgradeInbound(maConn, options)
     } catch (err) {
       log.error('inbound connection failed to upgrade', err)
       return maConn && maConn.close()

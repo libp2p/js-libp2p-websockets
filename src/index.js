@@ -17,6 +17,7 @@ const filters = require('./filters')
 
 /**
  * @typedef {import('multiaddr').Multiaddr} Multiaddr
+ * @typedef {import('libp2p-interfaces/src/types').AbortOptions} AbortOptions
  */
 
 /**
@@ -40,8 +41,7 @@ class WebSockets {
   /**
    * @async
    * @param {Multiaddr} ma
-   * @param {object} [options]
-   * @param {AbortSignal} [options.signal] - Used to abort dial requests
+   * @param {AbortOptions} [options]
    * @returns {Connection} An upgraded Connection
    */
   async dial (ma, options = {}) {
@@ -51,7 +51,7 @@ class WebSockets {
     const maConn = toConnection(socket, { remoteAddr: ma, signal: options.signal })
     log('new outbound connection %s', maConn.remoteAddr)
 
-    const conn = await this._upgrader.upgradeOutbound(maConn)
+    const conn = await this._upgrader.upgradeOutbound(maConn, options)
     log('outbound connection %s upgraded', maConn.remoteAddr)
     return conn
   }

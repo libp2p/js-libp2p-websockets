@@ -1,4 +1,4 @@
-# js-libp2p-websockets
+# js-libp2p-websockets <!-- omit in toc -->
 
 [![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
 [![](https://img.shields.io/badge/project-libp2p-yellow.svg?style=flat-square)](http://libp2p.io/)
@@ -16,9 +16,17 @@
 
 > JavaScript implementation of the WebSockets module that libp2p uses and that implements the interface-transport interface
 
-## Lead Maintainer
+## Table of Contents <!-- omit in toc -->
 
-[Jacob Heun](https://github.com/jacobheun)
+- [Description](#description)
+- [Usage](#usage)
+- [Install](#install)
+  - [npm](#npm)
+  - [Constructor properties](#constructor-properties)
+- [Libp2p Usage Example](#libp2p-usage-example)
+- [API](#api)
+  - [Transport](#transport)
+  - [Connection](#connection)
 
 ## Description
 
@@ -31,13 +39,13 @@
 ### npm
 
 ```sh
-> npm i libp2p-websockets
+> npm i @libp2p/websockets
 ```
 
 ### Constructor properties
 
 ```js
-const WS = require('libp2p-websockets')
+import WS from '@libp2p/websockets'
 
 const properties = {
   upgrader,
@@ -66,11 +74,11 @@ The available filters are:
 ## Libp2p Usage Example
 
 ```js
-const Libp2p = require('libp2p')
-const Websockets = require('libp2p-websockets')
-const filters = require('libp2p-websockets/src/filters')
-const MPLEX = require('libp2p-mplex')
-const { NOISE } = require('libp2p-noise')
+import Libp2p from 'libp2p'
+import { Websockets } from '@libp2p/websockets'
+import filters from 'libp2p-websockets/filters'
+import { MPLEX } from 'libp2p-mplex'
+import { NOISE } from 'libp2p-noise'
 
 const transportKey = Websockets.prototype[Symbol.toStringTag]
 const node = await Libp2p.create({

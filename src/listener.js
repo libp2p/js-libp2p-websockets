@@ -29,6 +29,10 @@ module.exports = ({ handler, upgrader }, options = {}) => {
 
     trackConn(server, maConn)
 
+    stream.on('close', () => {
+      server.__connections = server.__connections.filter(conn => conn !== maConn)
+    })
+
     if (handler) handler(conn)
     listener.emit('connection', conn)
   })

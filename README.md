@@ -57,7 +57,7 @@ const ws = new WS(properties)
 
 | Name | Type | Description | Default |
 |------|------|-------------|---------|
-| upgrader | [`Upgrader`](https://github.com/libp2p/interface-transport#upgrader) | connection upgrader object with `upgradeOutbound` and `upgradeInbound` | **REQUIRED** |
+| upgrader | [`Upgrader`](https://github.com/libp2p/js-libp2p-interfaces/tree/master/packages/libp2p-interfaces/src/transport#upgrader) | connection upgrader object with `upgradeOutbound` and `upgradeInbound` | **REQUIRED** |
 | filter | `(multiaddrs: Array<Multiaddr>) => Array<Multiaddr>` | override transport addresses filter | **Browser:** DNS+WSS multiaddrs / **Node.js:** DNS+{WS, WSS} multiaddrs |
 
 You can create your own address filters for this transports, or rely in the filters [provided](./src/filters.js).

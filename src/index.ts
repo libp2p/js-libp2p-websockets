@@ -28,7 +28,7 @@ export class WebSockets implements Transport<AbortOptions & WebSocketOptions, We
     const { upgrader, filter } = opts
 
     if (upgrader == null) {
-      throw new Error('An upgrader must be provided. See https://github.com/libp2p/interface-transport#upgrader.')
+      throw new Error('An upgrader must be provided. See https://github.com/libp2p/js-libp2p-interfaces/tree/master/packages/libp2p-interfaces/src/transport#upgrader')
     }
 
     this.upgrader = upgrader

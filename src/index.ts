@@ -2,7 +2,7 @@ import { connect, WebSocketOptions } from 'it-ws/client'
 import { multiaddrToUri as toUri } from '@multiformats/multiaddr-to-uri'
 import { AbortError } from '@libp2p/interfaces/errors'
 import pDefer from 'p-defer'
-import debug from 'debug'
+import { logger } from '@libp2p/logger'
 import env from 'wherearewe'
 import { createListener } from './listener.js'
 import { socketToMaConn } from './socket-to-conn.js'
@@ -13,9 +13,7 @@ import type { WebSocketListenerOptions } from './listener.js'
 import type { Multiaddr } from '@multiformats/multiaddr'
 import type { DuplexWebSocket } from 'it-ws/dist/src/duplex'
 
-const log = Object.assign(debug('libp2p:websockets'), {
-  error: debug('libp2p:websockets:error')
-})
+const log = logger('libp2p:websockets')
 
 /**
  * @class WebSockets

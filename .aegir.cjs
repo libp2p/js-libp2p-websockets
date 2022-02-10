@@ -13,7 +13,9 @@ module.exports = {
       const ma = new Multiaddr('/ip4/127.0.0.1/tcp/9095/ws')
       const listener = ws.createListener(conn => pipe(conn, conn))
       await listener.listen(ma)
-      listener.on('error', console.error)
+      listener.addEventListener('error', (evt) => {
+        console.error(evt.detail)
+      })
 
       return {
         listener

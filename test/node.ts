@@ -72,7 +72,7 @@ describe('listen', () => {
     it('listen, check for listening event', (done) => {
       listener = ws.createListener()
 
-      listener.on('listening', () => {
+      listener.addEventListener('listening', () => {
         done()
       })
 
@@ -82,8 +82,8 @@ describe('listen', () => {
     it('listen, check for the close event', (done) => {
       const listener = ws.createListener()
 
-      listener.on('listening', () => {
-        listener.on('close', done)
+      listener.addEventListener('listening', () => {
+        listener.addEventListener('close', () => done())
         void listener.close()
       })
 
@@ -177,7 +177,7 @@ describe('listen', () => {
     it('listen, check for listening event', (done) => {
       const listener = ws.createListener()
 
-      listener.on('listening', () => {
+      listener.addEventListener('listening', () => {
         void listener.close().then(done, done)
       })
 
@@ -187,8 +187,8 @@ describe('listen', () => {
     it('listen, check for the close event', (done) => {
       const listener = ws.createListener()
 
-      listener.on('listening', () => {
-        listener.on('close', done)
+      listener.addEventListener('listening', () => {
+        listener.addEventListener('close', () => done())
         void listener.close()
       })
 

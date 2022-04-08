@@ -2,7 +2,7 @@ import { Multiaddr } from '@multiformats/multiaddr'
 import { mockRegistrar, mockUpgrader } from '@libp2p/interface-compliance-tests/mocks'
 import { pipe }from 'it-pipe'
 
-/** @type {import('aegir').PartialOptions} */
+/** @type {import('aegir/types').PartialOptions} */
 export default {
   test: {
     async before () {
@@ -36,6 +36,11 @@ export default {
     },
     async after (_, before) {
       await before.listener.close()
+    }
+  },
+  build: {
+    config: {
+      entryPoints: ['./dist/src/index.js']
     }
   }
 }

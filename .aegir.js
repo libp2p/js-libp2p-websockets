@@ -1,13 +1,12 @@
-'use strict'
+import { Multiaddr } from '@multiformats/multiaddr'
+import { mockRegistrar, mockUpgrader } from '@libp2p/interface-compliance-tests/mocks'
+import { pipe }from 'it-pipe'
 
 /** @type {import('aegir').PartialOptions} */
-module.exports = {
+export default {
   test: {
     async before () {
-      const { Multiaddr } = await import('@multiformats/multiaddr')
-      const { mockRegistrar, mockUpgrader } = await import('@libp2p/interface-compliance-tests/mocks')
       const { WebSockets } = await import('./dist/src/index.js')
-      const { pipe } = await import('it-pipe')
 
       const protocol = '/echo/1.0.0'
       const registrar = mockRegistrar()

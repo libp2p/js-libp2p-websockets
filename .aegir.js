@@ -39,6 +39,6 @@ export default {
     }
   },
   build: {
-    bundlesizeMax: '66kB'
+    bundlesizeMax: '18kB'
   }
 }

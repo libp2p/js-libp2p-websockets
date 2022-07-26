@@ -166,7 +166,7 @@
     "err-code": "^3.0.1",
     "it-ws": "^5.0.0",
     "p-defer": "^4.0.0",
-    "p-timeout": "^5.0.2",
+    "p-timeout": "^6.0.0",
     "wherearewe": "^1.0.0"
   },
   "devDependencies": {

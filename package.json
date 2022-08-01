@@ -180,7 +180,7 @@
     "it-goodbye": "^4.0.1",
     "it-pipe": "^2.0.3",
     "it-take": "^1.0.2",
-    "p-wait-for": "^4.1.0",
+    "p-wait-for": "^5.0.0",
     "uint8arrays": "^3.0.0"
   },
   "browser": {

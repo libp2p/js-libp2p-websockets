@@ -346,7 +346,7 @@ describe('dial', () => {
         cert: fs.readFileSync('./test/fixtures/certificate.pem'),
         key: fs.readFileSync('./test/fixtures/key.pem')
       })
-      ws = webSockets()({ websocket: { rejectUnauthorized: false }, server })
+      ws = webSockets({ websocket: { rejectUnauthorized: false }, server })()
       listener = ws.createListener({
         handler: (conn) => {
           void conn.newStream([protocol]).then(async (stream) => {

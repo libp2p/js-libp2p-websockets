@@ -174,17 +174,17 @@
     "wherearewe": "^2.0.1"
   },
   "devDependencies": {
-    "@libp2p/interface-mocks": "^7.0.1",
+    "@libp2p/interface-mocks": "^8.0.2",
     "@libp2p/interface-transport-compliance-tests": "^3.0.0",
     "@types/ws": "^8.2.2",
     "aegir": "^37.5.3",
     "is-loopback-addr": "^2.0.1",
-    "it-all": "^1.0.6",
+    "it-all": "^2.0.0",
     "it-drain": "^2.0.0",
     "it-goodbye": "^4.0.1",
     "it-pipe": "^2.0.3",
     "it-stream-types": "^1.0.4",
-    "it-take": "^1.0.2",
+    "it-take": "^2.0.0",
     "p-wait-for": "^5.0.0",
     "uint8arraylist": "^2.3.2",
     "uint8arrays": "^4.0.2"

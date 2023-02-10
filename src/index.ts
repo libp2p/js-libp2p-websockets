@@ -23,7 +23,7 @@ export interface WebSocketsInit extends AbortOptions, WebSocketOptions {
   server?: Server
 }
 
-class WebSockets implements Transport {
+export class WebSockets implements Transport {
   private readonly init?: WebSocketsInit
 
   constructor (init?: WebSocketsInit) {

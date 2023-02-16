@@ -177,7 +177,7 @@
     "@libp2p/interface-mocks": "^8.0.2",
     "@libp2p/interface-transport-compliance-tests": "^3.0.0",
     "@types/ws": "^8.2.2",
-    "aegir": "^37.5.3",
+    "aegir": "^38.1.4",
     "is-loopback-addr": "^2.0.1",
     "it-all": "^2.0.0",
     "it-drain": "^2.0.0",

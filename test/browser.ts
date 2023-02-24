@@ -50,7 +50,7 @@ describe('libp2p-websockets', () => {
 
     if (isBrowser || isWebWorker) {
       expect(valid.length).to.equal(2)
-      expect(valid).to.equal([ma2, ma4])
+      expect(valid).to.deep.equal([ma2, ma4])
     } else {
       expect(valid.length).to.equal(4)
     }

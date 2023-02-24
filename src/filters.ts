@@ -21,7 +21,7 @@ export function all (multiaddrs: Multiaddr[]) {
   })
 }
 
-export function dnsWss (multiaddrs: Multiaddr[]) {
+export function wss (multiaddrs: Multiaddr[]) {
   return multiaddrs.filter((ma) => {
     if (ma.protoCodes().includes(CODE_CIRCUIT)) {
       return false
@@ -29,8 +29,7 @@ export function dnsWss (multiaddrs: Multiaddr[]) {
 
     const testMa = ma.decapsulateCode(CODE_P2P)
 
-    return mafmt.WebSocketsSecure.matches(testMa) &&
-      mafmt.DNS.matches(testMa.decapsulateCode(CODE_TCP).decapsulateCode(CODE_WSS))
+    return mafmt.WebSocketsSecure.matches(testMa)
   })
 }
 

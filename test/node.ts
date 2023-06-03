@@ -140,13 +140,22 @@ describe('listen', () => {
       expect(addrs.map((a) => a.toOptions().port)).to.not.include(0)
     })
 
-    it('listen on any Interface', async () => {
+    it('listen on any ip4 Interface', async () => {
       const ma = multiaddr('/ip4/0.0.0.0/tcp/0/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
       listener = ws.createListener({ upgrader })
 
       await listener.listen(ma)
       const addrs = listener.getAddrs()
       expect(addrs.map((a) => a.toOptions().host)).to.not.include('0.0.0.0')
+    })
+
+    it('listen on any ip6 Interface', async () => {
+      const ma = multiaddr('/ip6/::/tcp/0/ws/ipfs/Qmb6owHp6eaWArVbcJJbQSyifyJBttMMjYV76N2hMbf5Vw')
+      listener = ws.createListener({ upgrader })
+
+      await listener.listen(ma)
+      const addrs = listener.getAddrs()
+      expect(addrs.map((a) => a.toOptions().host)).to.not.include('::')
     })
 
     it('getAddrs', async () => {

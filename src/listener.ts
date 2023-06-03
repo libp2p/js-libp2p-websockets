@@ -119,17 +119,21 @@ class WebSocketListener extends EventEmitter<ListenerEvents> implements Listener
     const ipfsId = this.listeningMultiaddr.getPeerId()
     const protos = this.listeningMultiaddr.protos()
 
-    // Because TCP will only return the IPv6 version
-    // we need to capture from the passed multiaddr
-    if (protos.some(proto => proto.code === protocols('ip4').code)) {
+    const ipProto = protos.find(proto => proto.code === protocols('ip4').code || proto.code === protocols('ip6').code)
+    if (ipProto != null) {
       const wsProto = protos.some(proto => proto.code === protocols('ws').code) ? '/ws' : '/wss'
       let m = this.listeningMultiaddr.decapsulate('tcp')
-      m = m.encapsulate(`/tcp/${address.port}${wsProto}`)
-      if (ipfsId != null) {
-        m = m.encapsulate(`/p2p/${ipfsId}`)
+      const completeIpMultiaddr = (m: Multiaddr): Multiaddr => {
+        m = m.encapsulate(`/tcp/${address.port}${wsProto}`)
+        if (ipfsId != null) {
+          m = m.encapsulate(`/p2p/${ipfsId}`)
+        }
+        return m
       }
-
-      if (m.toString().includes('0.0.0.0')) {
+      m = completeIpMultiaddr(m)
+      const host = m.toOptions().host
+      const isIp4 = ipProto.code === protocols('ip4').code
+      if (host === (isIp4 ? '0.0.0.0' : '::')) {
         const netInterfaces = os.networkInterfaces()
         Object.values(netInterfaces).forEach(niInfos => {
           if (niInfos == null) {
@@ -137,8 +141,11 @@ class WebSocketListener extends EventEmitter<ListenerEvents> implements Listener
           }
 
           niInfos.forEach(ni => {
-            if (ni.family === 'IPv4') {
-              multiaddrs.push(multiaddr(m.toString().replace('0.0.0.0', ni.address)))
+            if (isIp4 && ni.family === 'IPv4') {
+              multiaddrs.push(completeIpMultiaddr(multiaddr('/ip4/' + ni.address)))
+            } else
+            if (!isIp4 && ni.family === 'IPv6') {
+              multiaddrs.push(completeIpMultiaddr(multiaddr('/ip6/' + ni.address)))
             }
           })
         })

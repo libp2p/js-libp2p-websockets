@@ -141,9 +141,9 @@ class WebSocketListener extends EventEmitter<ListenerEvents> implements Listener
           }
 
           niInfos.forEach(ni => {
-            if (isIp4 && ni.family === 'IPv4') {
+            if (ni.family === 'IPv4') {
               multiaddrs.push(completeIpMultiaddr(multiaddr('/ip4/' + ni.address)))
-            } else
+            }
             if (!isIp4 && ni.family === 'IPv6') {
               multiaddrs.push(completeIpMultiaddr(multiaddr('/ip6/' + ni.address)))
             }
